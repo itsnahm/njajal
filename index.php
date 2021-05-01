@@ -62,12 +62,12 @@ $action = $_REQUEST['action'] ?? '';
 								$page = "Data Pembelian";
 						} elseif ( 'laporan' == $id ) {
 								$page = "Laporan Keuangan";
-						} elseif ( 'allSalesman' == $id ) {
-								echo "Salesmans";
-						} elseif ( 'userProfile' == $id ) {
-								echo "Your Profile";
-						} elseif ( 'editManager' == $action ) {
-								echo "Edit Manager";
+						} elseif ( 'tambahAkun' == $id ) {
+								$page = "Tambah akun";
+						} elseif ( 'hapusAkun' == $id ) {
+								$page = "Hapus Akun";
+						} elseif ( 'ubahAkun' == $action ) {
+								$page = "Ubah Akun";
 						} elseif ( 'editPharmacist' == $action ) {
 								echo "Edit Pharmacist";
 						} elseif ( 'editSalesman' == $action ) {
@@ -598,9 +598,7 @@ $action = $_REQUEST['action'] ?? '';
 					</table>
 				</div>
 				<!-- /.card-body -->
-				<div class="card-footer">
-					Footer
-				</div>
+
 				<!-- /.card-footer-->
 			</div>
 			<!-- /.card -->
@@ -653,10 +651,7 @@ $action = $_REQUEST['action'] ?? '';
 				</table>
 			</div>
 			<!-- /.card-body -->
-			<div class="card-footer">
-				Footer
-			</div>
-			<!-- /.card-footer-->
+
 		</div>
 		<!-- /.card -->
 	</section>
@@ -707,11 +702,7 @@ $action = $_REQUEST['action'] ?? '';
 
 				</table>
 			</div>
-			<!-- /.card-body -->
-			<div class="card-footer">
-				Footer
-			</div>
-			<!-- /.card-footer-->
+
 		</div>
 		<!-- /.card -->
 	</section>
@@ -730,11 +721,7 @@ $action = $_REQUEST['action'] ?? '';
 			<div class="card-body">
 				Start creating your amazing application!
 			</div>
-			<!-- /.card-body -->
-			<div class="card-footer">
-				Footer
-			</div>
-			<!-- /.card-footer-->
+
 		</div>
 		<!-- /.card -->
 	</section>
@@ -748,6 +735,11 @@ $action = $_REQUEST['action'] ?? '';
 			<div class="card">
 				<div class="card-header">
 					<h3 class="card-title"><?php echo "$page"; ?></h3>
+
+					<div class="card-tools">
+						<a href="index.php?id=tambahAkun"><button type="button" class="btn btn-block btn-primary">+ Tambah akun baru</button></a>
+
+					</div>
 
 				</div>
 				<div class="card-body">
@@ -773,7 +765,7 @@ $action = $_REQUEST['action'] ?? '';
 							<td><?php echo $a['nama']; ?></td>
 							<td><?php echo $a['email']; ?></td>
 							<td><?php echo $a['status']?></td>
-							<td>Edit | Hapus</td>
+							<td><a href="index.php?action=ubahAkun&id=<?php echo $a['IDAkun'];  ?>">Ubah</a> | <a href="index.php?action=hapusAkun&id=<?php echo $a['IDAkun'];  ?>">Hapus</a></td>
 						</tr>
 					<?php } ?>
 				</tbody>
@@ -781,16 +773,156 @@ $action = $_REQUEST['action'] ?? '';
 					</table>
 				</div>
 
-				<!-- /.card-body -->
-				<div class="card-footer">
-					Footer
-				</div>
-				<!-- /.card-footer-->
+			
 			</div>
 			<!-- /.card -->
 
 		</section>
 	<?php } ?>
+
+	<!-- TAMBAH AKUN !!!!!!!!!!!!!!!-->
+		<?php if ('tambahAkun' == $id) { ?>
+			<section class="content">
+
+				<!-- Default box -->
+				<div class="card card-primary">
+					<div class="card-header">
+						<h3 class="card-title"><?php echo "$page"; ?></h3>
+
+					</div>
+					<div class="card-body">
+
+<?php
+//$query = mysqli_query($connection, "SELECT max(IDAkun) as terbesar FROM akun ");
+//$a = mysqli_fetch_array($query);
+//$nomor = $a['terbesar'];
+//$nomor++;
+ ?>
+						<form class="form-horizontal" action="create.php" method="POST">
+<!--							<div class="form-group row">
+								<label for="inputEmail3" class="col-sm-2 col-form-label">ID Akun</label>
+								<div class="col-sm-10">
+									<input type="number" name="IDAkun" class="form-control" id="inputEmail3" value="<?php echo "$nomor"; ?>" disabled>
+								</div>
+							</div> -->
+							<div class="form-group row">
+								<label for="inputEmail3" class="col-sm-2 col-form-label">Nama</label>
+								<div class="col-sm-10">
+									<input type="text" name="nama" class="form-control" id="inputEmail3" placeholder="Nama..." required>
+								</div>
+							</div>
+							<div class="form-group row">
+								<label for="inputEmail3" class="col-sm-2 col-form-label">Email</label>
+								<div class="col-sm-10">
+									<input type="email" name="email" class="form-control" id="inputEmail3" placeholder="Email..." required>
+								</div>
+							</div>
+							<div class="form-group row">
+								<label for="inputPassword3" class="col-sm-2 col-form-label">Password</label>
+								<div class="col-sm-10">
+									<input type="password" name="password" class="form-control" id="inputPassword3" placeholder="Password..." required>
+								</div>
+							</div>
+							<div class="form-group row">
+								<label for="inputPassword3" class="col-sm-2 col-form-label">Status</label>
+								<div class="col-sm-10">
+
+									<select class="form-control" name="status">
+										<option>Karyawan</option>
+										<option>Owner</option>
+
+									</select>
+								</div>
+							</div>
+							<input type="hidden" name="action" value="tambahAkun">
+
+					</div>
+
+					<!-- /.card-body -->
+					<div class="card-footer">
+						<button type="submit" class="btn btn-primary">Tambah</button>
+						<a href="index.php?id=akun"<button type="submit" class="btn btn-default float-right">Batal</button></a>
+					</div>
+
+					</form>
+					<!-- /.card-footer-->
+				</div>
+				<!-- /.card -->
+
+			</section>
+		<?php } ?>
+
+<!--UBAH AKUN!! -->
+<?php if ('ubahAkun' == $action) {
+$IDAkun = $_REQUEST['id'];
+$ubahAkun = "SELECT * FROM akun WHERE IDAkun='{$IDAkun}'";
+$result = mysqli_query($connection, $ubahAkun);
+
+$akun = mysqli_fetch_assoc($result);
+	 ?>
+	<section class="content">
+
+		<!-- Default box -->
+		<div class="card card-primary">
+			<div class="card-header">
+				<h3 class="card-title"><?php echo "$page"; ?></h3>
+
+			</div>
+			<div class="card-body">
+
+				<form class="form-horizontal" action="create.php" method="POST">
+
+					<div class="form-group row">
+						<label for="inputEmail3" class="col-sm-2 col-form-label">Nama</label>
+						<div class="col-sm-10">
+							<input type="text" name="nama" class="form-control" id="inputEmail3" value="<?php echo $akun['nama']; ?>" required>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="inputEmail3" class="col-sm-2 col-form-label">Email</label>
+						<div class="col-sm-10">
+							<input type="email" name="email" class="form-control" id="inputEmail3" value="<?php echo $akun['email']; ?>" required>
+						</div>
+					</div>
+
+					<div class="form-group row">
+						<label for="inputPassword3" class="col-sm-2 col-form-label">Status</label>
+						<div class="col-sm-10">
+
+							<select class="form-control" name="status" VALUES="<?php echo $akun['status']; ?>">
+								<option>Karyawan</option>
+								<option>Owner</option>
+
+							</select>
+						</div>
+					</div>
+					<input type="hidden" name="action" value="ubahAkun">
+					<input type="hidden" name="id" value="<?php echo $IDAkun; ?>">
+
+			</div>
+
+			<!-- /.card-body -->
+			<div class="card-footer">
+				<button type="submit" class="btn btn-primary">Simpan perubahan</button>
+				<a href="index.php?id=akun"<button type="submit" class="btn btn-default float-right">Batal</button></a>
+			</div>
+
+			</form>
+			<!-- /.card-footer-->
+		</div>
+		<!-- /.card -->
+
+	</section>
+<?php } ?>
+
+<!-- HAPUS AKUN -->
+		<?php if ( 'hapusAkun' == $action ) {
+                        $IDAkun = $_REQUEST['id'];
+                        $hapus = "DELETE FROM akun WHERE IDAkun ='{$IDAkun}'";
+                        $result = mysqli_query( $connection, $hapus );
+                        header( "location:index.php?id=akun" );
+                }?>
+
   </div>
   <!-- /.content-wrapper -->
 
@@ -856,6 +988,7 @@ $action = $_REQUEST['action'] ?? '';
     });
   });
 </script>
+
 
 </body>
 </html>
