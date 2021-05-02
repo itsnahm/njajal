@@ -54,6 +54,10 @@ $action = $_REQUEST['action'] ?? '';
 								$page = "Dashboard";
 						} elseif ( 'daftarBarang' == $id ) {
 								$page = "Daftar Barang";
+						} elseif ( 'tambahBarang' == $id ) {
+									$page = "Tambah Barang";
+						} elseif ( 'ubahBarang' == $action ) {
+								$page = "Ubah Barang";
 						} elseif ( 'akun' == $id ) {
 								$page = "Daftar akun";
 						} elseif ( 'penjualan' == $id ) {
@@ -563,6 +567,11 @@ $action = $_REQUEST['action'] ?? '';
 				<div class="card-header">
 					<h3 class="card-title"><?php echo "$page"; ?></h3>
 
+					<div class="card-tools">
+						<a href="index.php?id=tambahBarang"><button type="button" class="btn btn-block btn-danger">+ Tambah barang baru</button></a>
+
+					</div>
+
 				</div>
 				<div class="card-body">
 					<table id="example1" class="table table-bordered table-striped">
@@ -589,7 +598,7 @@ $action = $_REQUEST['action'] ?? '';
 							<td><?php echo $a['satuan']; ?></td>
 							<td><?php echo $a['kategori']?></td>
 							<td><?php echo $a['jumlahbarang']; ?></td>
-							<td>Edit | Hapus</td>
+							<td><a href="index.php?action=ubahBarang&id=<?php echo $a['IDBarang'];  ?>">Ubah</a> | <a href="index.php?action=hapusBarang&id=<?php echo $a['IDBarang'];  ?>">Hapus</a></td>
 						</tr>
 						</tbody>
 					<?php } ?>
@@ -606,6 +615,156 @@ $action = $_REQUEST['action'] ?? '';
 		</section>
 	<?php } ?>
 
+<!-- TAMBAH BARANG BARU!!-->
+<?php if ('tambahBarang' == $id) { ?>
+	<section class="content">
+
+		<!-- Default box -->
+		<div class="card card-danger">
+			<div class="card-header">
+				<h3 class="card-title"><?php echo "$page"; ?></h3>
+
+			</div>
+			<div class="card-body">
+
+				<form class="form-horizontal" action="create.php" method="POST">
+
+					<div class="form-group row">
+						<label for="inputEmail3" class="col-sm-2 col-form-label">Nama</label>
+						<div class="col-sm-10">
+							<input type="text" name="namabarang" class="form-control" id="inputEmail3" placeholder="Nama..." required>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="inputPassword3" class="col-sm-2 col-form-label">Satuan</label>
+						<div class="col-sm-10">
+
+							<select class="form-control" name="satuan">
+								<option>Biji</option>
+								<option>Meter</option>
+
+							</select>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="inputPassword3" class="col-sm-2 col-form-label">Kategori</label>
+						<div class="col-sm-10">
+
+							<select class="form-control" name="kategori">
+								<option>Lampu</option>
+								<option>Kabel</option>
+								<option>Mic</option>
+								<option>Baut</option>
+
+							</select>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="inputEmail3" class="col-sm-2 col-form-label">Jumlah barang</label>
+						<div class="col-sm-10">
+							<input type="email" name="email" class="form-control" id="inputEmail3" placeholder="0" disabled>
+						</div>
+					</div>
+
+
+					<input type="hidden" name="action" value="tambahBarang">
+
+			</div>
+
+			<!-- /.card-body -->
+			<div class="card-footer">
+				<button type="submit" class="btn btn-danger">Tambah</button>
+				<a href="index.php?id=daftarBarang"<button type="submit" class="btn btn-default float-right">Batal</button></a>
+			</div>
+
+			</form>
+			<!-- /.card-footer-->
+		</div>
+		<!-- /.card -->
+
+	</section>
+<?php } ?>
+
+<!--UBAH BARANG -->
+<?php if ('ubahBarang' == $action) {
+
+	$IDBarang = $_REQUEST['id'];
+	$ubahBarang = "SELECT * FROM daftarbarang WHERE IDBarang='{$IDBarang}'";
+	$result = mysqli_query($connection, $ubahBarang);
+
+	$barang = mysqli_fetch_assoc($result);
+	?>
+	<section class="content">
+
+		<!-- Default box -->
+		<div class="card card-danger">
+			<div class="card-header">
+				<h3 class="card-title"><?php echo "$page"; ?></h3>
+
+			</div>
+			<div class="card-body">
+
+				<form class="form-horizontal" action="create.php" method="POST">
+
+					<div class="form-group row">
+						<label for="inputEmail3" class="col-sm-2 col-form-label">Nama</label>
+						<div class="col-sm-10">
+							<input type="text" name="namabarang" class="form-control" id="inputEmail3" value="<?php echo $barang['namabarang']; ?>" required>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="inputPassword3" class="col-sm-2 col-form-label">Satuan</label>
+						<div class="col-sm-10">
+
+							<select class="form-control" name="satuan">
+								<option value="Biji" <?php echo $barang['satuan'] == 'Biji' ? 'selected="selected"' : '' ?>>Biji</option>
+   							<option value="Meter" <?php echo $barang['satuan'] == 'Meter' ? 'selected="selected"' : '' ?>>Meter</option>
+
+
+							</select>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="inputPassword3" class="col-sm-2 col-form-label">Kategori</label>
+						<div class="col-sm-10">
+
+							<select class="form-control" name="kategori">
+								<option value="Lampu" <?php echo $barang['kategori'] == 'Lampu' ? 'selected="selected"' : '' ?>>Lampu</option>
+   							<option value="Kabel" <?php echo $barang['kategori'] == 'Kabel' ? 'selected="selected"' : '' ?>>Kabel</option>
+								<option value="Mic" <?php echo $barang['kategori'] == 'Mic' ? 'selected="selected"' : '' ?>>Mic</option>
+								<option value="Baut" <?php echo $barang['kategori'] == 'Baut' ? 'selected="selected"' : '' ?>>Baut</option>
+
+
+							</select>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="inputEmail3" class="col-sm-2 col-form-label">Jumlah barang</label>
+						<div class="col-sm-10">
+							<input type="email" name="email" class="form-control" id="inputEmail3" value="<?php echo $barang['jumlahbarang']; ?>" disabled>
+						</div>
+					</div>
+
+
+					<input type="hidden" name="action" value="ubahBarang">
+					<input type="hidden" name="id" value="<?php echo $IDBarang; ?>">
+
+			</div>
+
+			<!-- /.card-body -->
+			<div class="card-footer">
+				<button type="submit" class="btn btn-danger">Simpan perubahan</button>
+				<a href="index.php?id=daftarBarang"<button type="submit" class="btn btn-default float-right">Batal</button></a>
+			</div>
+
+			</form>
+			<!-- /.card-footer-->
+		</div>
+		<!-- /.card -->
+
+	</section>
+<?php } ?>
+
 <!-- PENJUALAN!!!!!!! -->
 <?php if ('penjualan' == $id) { ?>
 	<section class="content">
@@ -614,6 +773,7 @@ $action = $_REQUEST['action'] ?? '';
 		<div class="card">
 			<div class="card-header">
 				<h3 class="card-title"><?php echo "$page"; ?></h3>
+
 
 			</div>
 			<div class="card-body">
@@ -773,7 +933,7 @@ $action = $_REQUEST['action'] ?? '';
 					</table>
 				</div>
 
-			
+
 			</div>
 			<!-- /.card -->
 
@@ -792,19 +952,7 @@ $action = $_REQUEST['action'] ?? '';
 					</div>
 					<div class="card-body">
 
-<?php
-//$query = mysqli_query($connection, "SELECT max(IDAkun) as terbesar FROM akun ");
-//$a = mysqli_fetch_array($query);
-//$nomor = $a['terbesar'];
-//$nomor++;
- ?>
-						<form class="form-horizontal" action="create.php" method="POST">
-<!--							<div class="form-group row">
-								<label for="inputEmail3" class="col-sm-2 col-form-label">ID Akun</label>
-								<div class="col-sm-10">
-									<input type="number" name="IDAkun" class="form-control" id="inputEmail3" value="<?php echo "$nomor"; ?>" disabled>
-								</div>
-							</div> -->
+				<form class="form-horizontal" action="create.php" method="POST">
 							<div class="form-group row">
 								<label for="inputEmail3" class="col-sm-2 col-form-label">Nama</label>
 								<div class="col-sm-10">
@@ -840,7 +988,7 @@ $action = $_REQUEST['action'] ?? '';
 
 					<!-- /.card-body -->
 					<div class="card-footer">
-						<button type="submit" class="btn btn-primary">Tambah</button>
+						<button type="submit" name="tambahAkun" class="btn btn-primary">Tambah</button>
 						<a href="index.php?id=akun"<button type="submit" class="btn btn-default float-right">Batal</button></a>
 					</div>
 
@@ -889,9 +1037,11 @@ $akun = mysqli_fetch_assoc($result);
 						<label for="inputPassword3" class="col-sm-2 col-form-label">Status</label>
 						<div class="col-sm-10">
 
-							<select class="form-control" name="status" VALUES="<?php echo $akun['status']; ?>">
-								<option>Karyawan</option>
-								<option>Owner</option>
+							<select class="form-control" name="status">
+						<!--		<option>Karyawan</option>
+								<option>Owner</option> -->
+								<option value="Karyawan" <?php echo $akun['status'] == 'Karyawan' ? 'selected="selected"' : '' ?>>Karyawan</option>
+   							<option value="Owner" <?php echo $akun['status'] == 'Owner' ? 'selected="selected"' : '' ?>>Owner</option>
 
 							</select>
 						</div>
