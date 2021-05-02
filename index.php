@@ -41,9 +41,11 @@ $action = $_REQUEST['action'] ?? '';
   <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
   <!-- Theme style -->
   <link rel="stylesheet" href="theme/dist/css/adminlte.min.css">
+	<!-- DataTables -->
 	<link rel="stylesheet" href="theme/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
 	<link rel="stylesheet" href="theme/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
 	<link rel="stylesheet" href="theme/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
+
 </head>
 
 <div class="topber__title">
@@ -64,6 +66,8 @@ $action = $_REQUEST['action'] ?? '';
 								$page = "Data Penjualan";
 						} elseif ( 'pembelian' == $id ) {
 								$page = "Data Pembelian";
+						} elseif ( 'tambahBeli' == $id ) {
+								$page = "Tambah Pembelian Barang";
 						} elseif ( 'laporan' == $id ) {
 								$page = "Laporan Keuangan";
 						} elseif ( 'tambahAkun' == $id ) {
@@ -765,6 +769,14 @@ $action = $_REQUEST['action'] ?? '';
 	</section>
 <?php } ?>
 
+<!-- HAPUS BARANG -->
+		<?php if ( 'hapusBarang' == $action ) {
+                        $IDBarang = $_REQUEST['id'];
+                        $hapus = "DELETE FROM daftarbarang WHERE IDBarang ='{$IDBarang}'";
+                        $result = mysqli_query( $connection, $hapus );
+                        header( "location:index.php?id=daftarBarang" );
+                }?>
+
 <!-- PENJUALAN!!!!!!! -->
 <?php if ('penjualan' == $id) { ?>
 	<section class="content">
@@ -826,6 +838,11 @@ $action = $_REQUEST['action'] ?? '';
 			<div class="card-header">
 				<h3 class="card-title"><?php echo "$page"; ?></h3>
 
+				<div class="card-tools">
+					<a href="index.php?id=tambahBeli"><button type="button" class="btn btn-block btn-warning">+ Tambah pembelian baru</button></a>
+
+				</div>
+
 			</div>
 			<div class="card-body">
 				<table id="example1" class="table table-bordered table-striped">
@@ -833,8 +850,8 @@ $action = $_REQUEST['action'] ?? '';
 					<tr>
 						<th>ID Pembelian</th>
 						<th>Nama Barang</th>
-						<th>Jumlah beli</th>
 						<th>Tanggal Beli</th>
+						<th>Jumlah beli</th>
 						<th>Harga beli</th>
 						<th>Total harga</th>
 						<th>Aksi</th>
@@ -850,8 +867,8 @@ $action = $_REQUEST['action'] ?? '';
 					<tr>
 						<td><?php echo $a['IDBeli']; ?></td>
 						<td><?php echo $a['namabarang']; ?></td>
-						<td><?php echo $a['jumlahbeli']; ?></td>
 						<td><?php echo $a['tanggalbeli']?></td>
+						<td><?php echo $a['jumlahbeli']; ?></td>
 						<td><?php echo $a['hargabeli']; ?></td>
 						<td><?php echo $a['totalpembelian']; ?></td>
 						<td>Edit | Hapus</td>
@@ -865,6 +882,93 @@ $action = $_REQUEST['action'] ?? '';
 
 		</div>
 		<!-- /.card -->
+	</section>
+<?php } ?>
+
+<!-- TAMBAH PEMBELIAN BARANG -->
+<?php if ('tambahBeli' == $id) { ?>
+	<section class="content">
+
+		<!-- Default box -->
+		<div class="card card-warning">
+			<div class="card-header">
+				<h3 class="card-title"><?php echo "$page"; ?></h3>
+
+			</div>
+			<div class="card-body">
+
+		<form class="form-horizontal" action="create.php" method="POST">
+					<div class="form-group row">
+						<label for="inputEmail3" class="col-sm-2 col-form-label">Nama barang</label>
+						<div class="col-sm-10">
+			<!--				<input type="text" name="namabeli" class="form-control" id="inputEmail3" placeholder="Nama..." required> -->
+			<select id="kd_desa" class="form-control" name="namabarang">
+					<?php
+					$sql = mysqli_query($connection,"SELECT * FROM daftarbarang");
+					while ($result = mysqli_fetch_array($sql)) {
+					?>
+					<option value="<?php echo $result['IDBarang'] ?>"><?php echo $result['namabarang'] ?></option>
+					<?php } ?>
+				</select>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="inputPassword3" class="col-sm-2 col-form-label">Tanggal beli</label>
+						<div class="col-sm-10">
+
+							<div class="input-group">
+
+								<input type="date" name="tanggalbeli" class="form-control" data-date-format="DD/MM/YYYY" placeholder="dd/mm/yyyy" required autofocus>
+							</div>
+							<!-- /.input group -->
+	<!--						<div class="input-group date" id="reservationdate" data-target-input="nearest">
+									<input type="text" class="form-control datetimepicker-input" data-target="#reservationdate"/>
+									<div class="input-group-append" data-target="#reservationdate" data-toggle="datetimepicker">
+											<div class="input-group-text"><i class="fa fa-calendar"></i></div>
+									</div>
+							</div> -->
+	<!--						<div class="input-group">
+							<div class="input-group-prepend">
+								<span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+							</div>
+							<input type="text" class="form-control" data-inputmask-alias="datetime" data-inputmask-inputformat="dd/mm/yyyy" data-mask required>
+						</div>-->
+					</div>
+					</div>
+					<div class="form-group row">
+						<label for="inputEmail3" class="col-sm-2 col-form-label">Jumlah beli</label>
+						<div class="col-sm-10">
+							<input type="number" name="jumlahbeli" class="form-control" id="jumlahbeli" onkeyup="perkalian();" required>
+						</div>
+					</div>
+
+					<div class="form-group row">
+						<label for="inputEmail3" class="col-sm-2 col-form-label">Harga beli</label>
+						<div class="col-sm-10">
+							<input type="number" name="hargabeli" class="form-control" id="hargabeli" onkeyup="perkalian();" required>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="inputEmail3" class="col-sm-2 col-form-label">Total </label>
+						<div class="col-sm-10">
+							<input type="number" name="totalbeli" class="form-control" id="totalbeli" placeholder="Total beli..." readonly>
+						</div>
+					</div>
+					<input type="hidden" name="action" value="tambahbeli">
+
+			</div>
+
+			<!-- /.card-body -->
+			<div class="card-footer">
+				<button type="submit" name="beli" class="btn btn-warning">Tambah</button>
+				<a href="index.php?id=pembelian"<button type="submit" class="btn btn-default float-right">Batal</button></a>
+			</div>
+
+			</form>
+			<!-- /.card-footer-->
+		</div>
+		<!-- /.card -->
+
 	</section>
 <?php } ?>
 
@@ -982,7 +1086,7 @@ $action = $_REQUEST['action'] ?? '';
 									</select>
 								</div>
 							</div>
-							<input type="hidden" name="action" value="tambahAkun">
+							<input type="hidden" name="action" value="tambahakun">
 
 					</div>
 
@@ -1108,6 +1212,7 @@ $akun = mysqli_fetch_assoc($result);
 <script src="theme/dist/js/demo.js"></script>
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
 <script src="theme/dist/js/pages/dashboard3.js"></script>
+<!-- DataTables  & Plugins -->
 <script src="theme/plugins/datatables/jquery.dataTables.min.js"></script>
 <script src="theme/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
 <script src="theme/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
@@ -1120,6 +1225,10 @@ $akun = mysqli_fetch_assoc($result);
 <script src="theme/plugins/datatables-buttons/js/buttons.html5.min.js"></script>
 <script src="theme/plugins/datatables-buttons/js/buttons.print.min.js"></script>
 <script src="theme/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+
+<script src="theme/plugins/moment/moment.min.js"></script>
+<script src="theme/plugins/inputmask/jquery.inputmask.min.js"></script>
+
 
 <script>
   $(function () {
@@ -1138,6 +1247,33 @@ $akun = mysqli_fetch_assoc($result);
     });
   });
 </script>
+
+<!--<script>
+
+
+function startCalc(){
+interval = setInterval(“calc()”,1);}
+function calc(){
+a = document.autoSumForm.jumlahbeli.value;
+b = document.autoSumForm.hargabeli.value;
+document.autoSumForm.jumlah.value = (a * 1) * (b * 1);}
+function stopCalc(){
+clearInterval(interval);}
+
+</script> -->
+
+<script>
+function perkalian() {
+		var txtFirstNumberValue = document.getElementById('jumlahbeli').value;
+		var txtSecondNumberValue = document.getElementById('hargabeli').value;
+		var result = parseInt(txtFirstNumberValue) * parseInt(txtSecondNumberValue);
+		if (!isNaN(result)) {
+			 document.getElementById('totalbeli').value = result;
+		}
+}
+</script>
+
+
 
 
 </body>
