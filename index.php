@@ -64,12 +64,20 @@ $action = $_REQUEST['action'] ?? '';
 								$page = "Daftar akun";
 						} elseif ( 'penjualan' == $id ) {
 								$page = "Data Penjualan";
+						} elseif ( 'tambahJual' == $id ) {
+								$page = "Tambah Penjualan Barang";
+						}	elseif ( 'ubahJual' == $action ) {
+								$page = "Ubah Penjualan";
+						} elseif ( 'hapusJual' == $action ) {
+								$page = "Hapus Penjualan";
 						} elseif ( 'pembelian' == $id ) {
 								$page = "Data Pembelian";
 						} elseif ( 'tambahBeli' == $id ) {
 								$page = "Tambah Pembelian Barang";
 						} elseif ( 'ubahBeli' == $action ) {
 								$page = "Ubah Pembelian";
+						} elseif ( 'hapusBeli' == $action ) {
+						 		$page = "Hapus beli";
 						} elseif ( 'laporan' == $id ) {
 								$page = "Laporan Keuangan";
 						} elseif ( 'tambahAkun' == $id ) {
@@ -236,7 +244,7 @@ $action = $_REQUEST['action'] ?? '';
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0"><?php echo "$page"; ?></h1>
+            <h1 class="m-0">SIA Persediaan Putra HM 4 Elektronik</h1>
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
@@ -788,6 +796,10 @@ $action = $_REQUEST['action'] ?? '';
 			<div class="card-header">
 				<h3 class="card-title"><?php echo "$page"; ?></h3>
 
+				<div class="card-tools">
+					<a href="index.php?id=tambahJual"><button type="button" class="btn btn-block btn-success">+ Tambah penjualan baru</button></a>
+
+				</div>
 
 			</div>
 			<div class="card-body">
@@ -796,8 +808,8 @@ $action = $_REQUEST['action'] ?? '';
 					<tr>
 						<th>ID Penjualan</th>
 						<th>Nama Barang</th>
-						<th>Jumlah Penjualan</th>
 						<th>Tanggal Jual</th>
+						<th>Jumlah Penjualan</th>
 						<th>Harga Jual</th>
 						<th>Total Harga</th>
 						<th>Aksi</th>
@@ -812,11 +824,11 @@ $action = $_REQUEST['action'] ?? '';
 					<tr>
 						<td><?php echo $a['IDJual']; ?></td>
 						<td><?php echo $a['namabarang']; ?></td>
-						<td><?php echo $a['jumlahjual']; ?></td>
 						<td><?php echo $a['tanggaljual']?></td>
+						<td><?php echo $a['jumlahjual']; ?></td>
 						<td><?php echo $a['hargajual']; ?></td>
 						<td><?php echo $a['totalpenjualan']; ?></td>
-						<td>Edit | Hapus</td>
+						<td><a href="index.php?action=ubahJual&id=<?php echo $a['IDJual'];  ?>">Ubah</a> | <a href="index.php?action=hapusJual&id=<?php echo $a['IDJual'];  ?>">Hapus</a></td>
 					</tr>
 				</tbody>
 				<?php } ?>
@@ -830,6 +842,171 @@ $action = $_REQUEST['action'] ?? '';
 		<!-- /.card -->
 	</section>
 <?php } ?>
+
+<!--TAMBAH PENJUALAN BARANG -->
+<?php if ('tambahJual' == $id) { ?>
+	<section class="content">
+
+		<!-- Default box -->
+		<div class="card card-success">
+			<div class="card-header">
+				<h3 class="card-title"><?php echo "$page"; ?></h3>
+
+			</div>
+			<div class="card-body">
+
+		<form class="form-horizontal" action="create.php" method="POST">
+					<div class="form-group row">
+						<label for="inputEmail3" class="col-sm-2 col-form-label">Nama barang</label>
+						<div class="col-sm-10">
+			<!--				<input type="text" name="namabeli" class="form-control" id="inputEmail3" placeholder="Nama..." required> -->
+			<select id="kd_desa" class="form-control" name="namabarang">
+					<?php
+					$sql = mysqli_query($connection,"SELECT * FROM daftarbarang");
+					while ($result = mysqli_fetch_array($sql)) {
+					?>
+					<option value="<?php echo $result['IDBarang'] ?>"><?php echo $result['namabarang'] ?></option>
+					<?php } ?>
+				</select>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="inputPassword3" class="col-sm-2 col-form-label">Tanggal jual</label>
+						<div class="col-sm-10">
+
+							<div class="input-group">
+
+								<input type="date" name="tanggaljual" class="form-control" data-date-format="DD/MM/YYYY" placeholder="dd/mm/yyyy" required autofocus>
+							</div>
+
+					</div>
+					</div>
+					<div class="form-group row">
+						<label for="inputEmail3" class="col-sm-2 col-form-label">Jumlah jual</label>
+						<div class="col-sm-10">
+							<input type="number" name="jumlahjual" class="form-control" id="jumlahjual" onkeyup="penjualan();" required>
+						</div>
+					</div>
+
+					<div class="form-group row">
+						<label for="inputEmail3" class="col-sm-2 col-form-label">Harga jual per item</label>
+						<div class="col-sm-10">
+							<input type="number" name="hargajual" class="form-control" id="hargajual" onkeyup="penjualan();" required>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="inputEmail3" class="col-sm-2 col-form-label">Total </label>
+						<div class="col-sm-10">
+							<input type="number" name="totaljual" class="form-control" id="totaljual" placeholder="Total jual..." readonly>
+						</div>
+					</div>
+					<input type="hidden" name="action" value="tambahjual">
+
+			</div>
+
+			<!-- /.card-body -->
+			<div class="card-footer">
+				<button type="submit" name="beli" class="btn btn-success">Tambah</button>
+				<a href="index.php?id=penjualan"<button type="submit" class="btn btn-default float-right">Batal</button></a>
+			</div>
+
+			</form>
+			<!-- /.card-footer-->
+		</div>
+		<!-- /.card -->
+
+	</section>
+<?php } ?>
+
+<!--UBAH PENJUALAN -->
+<?php if ('ubahJual' == $action) {
+	$IDJual = $_REQUEST['id'];
+	$ubahJual = "SELECT * FROM penjualan WHERE IDJual='{$IDJual}'";
+	$result = mysqli_query($connection, $ubahJual);
+
+	$jual = mysqli_fetch_assoc($result);
+	 ?>
+	<section class="content">
+
+		<!-- Default box -->
+		<div class="card card-success">
+			<div class="card-header">
+				<h3 class="card-title"><?php echo "$page"; ?></h3>
+
+			</div>
+			<div class="card-body">
+
+		<form class="form-horizontal" action="create.php" method="POST">
+					<div class="form-group row">
+						<label for="inputEmail3" class="col-sm-2 col-form-label">Nama barang</label>
+						<div class="col-sm-10">
+			<!--				<input type="text" name="namabeli" class="form-control" id="inputEmail3" placeholder="Nama..." required> -->
+			<select id="kd_desa" class="form-control" name="namabarang">
+					<?php
+					$sql = mysqli_query($connection,"SELECT * FROM daftarbarang");
+					while ($result = mysqli_fetch_array($sql)) {
+					?>
+					<option value="<?php echo $result['IDBarang'] ?>"><?php echo $result['namabarang'] ?></option>
+					<?php } ?>
+				</select>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="inputPassword3" class="col-sm-2 col-form-label">Tanggal jual</label>
+						<div class="col-sm-10">
+
+							<div class="input-group">
+
+								<input type="date" name="tanggaljual" class="form-control" data-date-format="DD/MM/YYYY" placeholder="dd/mm/yyyy" value="<?php echo $jual['tanggaljual'] ?>" required autofocus>
+							</div>
+
+					</div>
+					</div>
+					<div class="form-group row">
+						<label for="inputEmail3" class="col-sm-2 col-form-label">Jumlah jual</label>
+						<div class="col-sm-10">
+							<input type="number" name="jumlahjual" class="form-control" id="jumlahjual" onkeyup="penjualan();" value="<?php echo $jual['jumlahjual'] ?>" required>
+						</div>
+					</div>
+
+					<div class="form-group row">
+						<label for="inputEmail3" class="col-sm-2 col-form-label">Harga jual per item</label>
+						<div class="col-sm-10">
+							<input type="number" name="hargajual" class="form-control" id="hargajual" onkeyup="penjualan();" value="<?php echo $jual['hargajual'] ?>" required>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="inputEmail3" class="col-sm-2 col-form-label">Total </label>
+						<div class="col-sm-10">
+							<input type="number" name="totaljual" class="form-control" id="totaljual" placeholder="Total jual..." value="<?php echo $jual['totalpenjualan'] ?>" readonly>
+						</div>
+					</div>
+					<input type="hidden" name="action" value="ubahJual">
+					<input type="hidden" name="id" value="<?php echo $IDJual; ?>">
+
+			</div>
+
+			<!-- /.card-body -->
+			<div class="card-footer">
+				<button type="submit" name="beli" class="btn btn-success">Simpan perubahan</button>
+				<a href="index.php?id=penjualan"<button type="submit" class="btn btn-default float-right">Batal</button></a>
+			</div>
+
+			</form>
+			<!-- /.card-footer-->
+		</div>
+		<!-- /.card -->
+
+	</section>
+<?php } ?>
+
+<!-- HAPUS PENJUALAN -->
+		<?php if ( 'hapusJual' == $action ) {
+                        $IDJual = $_REQUEST['id'];
+                        $hapus = "DELETE FROM penjualan WHERE IDJual ='{$IDJual}'";
+                        $result = mysqli_query( $connection, $hapus );
+                        header( "location:index.php?id=penjualan" );
+                }?>
 
 <!-- PEMBELIAN!!!!!-->
 <?php if ('pembelian' == $id) { ?>
@@ -920,7 +1097,7 @@ $action = $_REQUEST['action'] ?? '';
 
 							<div class="input-group">
 
-								<input type="date" name="tanggalbeli" class="form-control" data-date-format="DD/MM/YYYY" placeholder="dd/mm/yyyy" required autofocus>
+								<input type="date" name="tanggalbeli" class="form-control" data-format="DD/MM/YYYY" placeholder="dd/mm/yyyy" required autofocus>
 							</div>
 
 					</div>
@@ -933,7 +1110,7 @@ $action = $_REQUEST['action'] ?? '';
 					</div>
 
 					<div class="form-group row">
-						<label for="inputEmail3" class="col-sm-2 col-form-label">Harga beli</label>
+						<label for="inputEmail3" class="col-sm-2 col-form-label">Harga beli per item</label>
 						<div class="col-sm-10">
 							<input type="number" name="hargabeli" class="form-control" id="hargabeli" onkeyup="perkalian();" required>
 						</div>
@@ -986,15 +1163,14 @@ $beli = mysqli_fetch_assoc($result);
 						<label for="inputEmail3" class="col-sm-2 col-form-label">Nama barang</label>
 						<div class="col-sm-10">
 			<!--				<input type="text" name="namabeli" class="form-control" id="inputEmail3" placeholder="Nama..." required> -->
-			<select id="kd_desa" class="form-control" name="namabarang" value="<?php echo $beli['namabarang'] ?>">
+			<select id="kd_desa" class="form-control" name="namabarang" >
+
 				<?php
-
-				$data = mysqli_query($connection, "SELECT * FROM pembelian pem join daftarbarang daf on pem.IDBarang = daf.IDBarang");
-				while ($a = mysqli_fetch_array($data)) {
-
-				 ?>
-					<option value="<?php echo $a['IDBarang'] ?>"><?php echo $a['namabarang'] ?></option>
-					<?php } ?>
+				$sql = mysqli_query($connection,"SELECT * FROM daftarbarang");
+				while ($result = mysqli_fetch_array($sql)) {
+				?>
+				<option value="<?php echo $result['IDBarang'] ?>"><?php echo $result['namabarang'] ?></option>
+				<?php } ?>
 				</select>
 						</div>
 					</div>
@@ -1046,6 +1222,14 @@ $beli = mysqli_fetch_assoc($result);
 
 	</section>
 <?php } ?>
+
+<!--HAPUS BELI -->
+<?php if ( 'hapusBeli' == $action ) {
+										$IDBeli = $_REQUEST['id'];
+										$hapus = "DELETE FROM pembelian WHERE IDBeli ='{$IDBeli}'";
+										$result = mysqli_query( $connection, $hapus );
+										header( "location:index.php?id=pembelian" );
+						}?>
 
 <!--LAPORAN UANG!! -->
 <?php if ('laporan' == $id) { ?>
@@ -1344,6 +1528,15 @@ function perkalian() {
 		var result = parseInt(txtFirstNumberValue) * parseInt(txtSecondNumberValue);
 		if (!isNaN(result)) {
 			 document.getElementById('totalbeli').value = result;
+		}
+}
+
+function penjualan() {
+		var txt3NumberValue = document.getElementById('jumlahjual').value;
+		var txt4NumberValue = document.getElementById('hargajual').value;
+		var result = parseInt(txt3NumberValue) * parseInt(txt4NumberValue);
+		if (!isNaN(result)) {
+			 document.getElementById('totaljual').value = result;
 		}
 }
 </script>

@@ -83,10 +83,35 @@ if ( !$connection ) {
 
       if ( $IDBeli && $namabarang && $tanggalbeli && $jumlahbeli && $hargabeli && $totalbeli ) {
   //        $hashPassword = password_hash( $password, PASSWORD_BCRYPT );
-          $query = "UPDATE pembelian SET namabarang='{$namabarang}', jumlahbeli='{$jumlahbeli}', tanggalbeli='$tanggalbeli', hargabeli='$hargabeli', totalpembelian='$totalbeli' WHERE IDBeli='{$IDBeli}'";
+          $query = "UPDATE pembelian SET IDBarang='{$namabarang}', jumlahbeli='{$jumlahbeli}', tanggalbeli='$tanggalbeli', hargabeli='$hargabeli', totalpembelian='$totalbeli' WHERE IDBeli='{$IDBeli}'";
           mysqli_query( $connection, $query );
           header( "location:index.php?id=pembelian" );
           }
+
+  } else if ('tambahjual' == $action) {
+    $namabarang = $_REQUEST['namabarang'] ?? '';
+    $tanggaljual = $_REQUEST['tanggaljual'] ?? '';
+    $jumlahjual = $_REQUEST['jumlahjual'] ?? '';
+    $hargajual = $_REQUEST['hargajual'] ?? '';
+    $totaljual = $_REQUEST['totaljual'] ?? '';
+
+   if ($namabarang && $tanggaljual && $jumlahjual && $hargajual && $totaljual) {
+    $query = "INSERT INTO penjualan(IDBarang,jumlahjual,tanggaljual,hargajual,totalpenjualan) VALUES ('{$namabarang}','$jumlahjual','$tanggaljual','$hargajual','$totaljual')";
+    mysqli_query( $connection, $query );
+    header( "location:index.php?id=penjualan" );
+  }
+} else if ('ubahJual' == $action) {
+  $IDJual = $_POST['id'];
+  $namabarang = $_POST['namabarang'];
+  $tanggaljual = $_POST['tanggaljual'];
+  $jumlahjual = $_POST['jumlahjual'];
+  $hargajual = $_POST['hargajual'];
+  $totaljual = $_POST['totaljual'];
+} if ($namabarang && $tanggaljual && $jumlahjual && $hargajual && $totaljual) {
+  $query = "UPDATE penjualan SET IDBarang='{$namabarang}', jumlahjual='{$jumlahjual}', tanggaljual='$tanggaljual', hargajual='$hargajual', totalpenjualan='$totaljual' WHERE IDJual='{$IDJual}'";
+  mysqli_query( $connection, $query );
+  header( "location:index.php?id=penjualan" );
 }
+
 }
  ?>
