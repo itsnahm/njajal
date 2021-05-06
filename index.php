@@ -68,6 +68,8 @@ $action = $_REQUEST['action'] ?? '';
 								$page = "Data Pembelian";
 						} elseif ( 'tambahBeli' == $id ) {
 								$page = "Tambah Pembelian Barang";
+						} elseif ( 'ubahBeli' == $action ) {
+								$page = "Ubah Pembelian";
 						} elseif ( 'laporan' == $id ) {
 								$page = "Laporan Keuangan";
 						} elseif ( 'tambahAkun' == $id ) {
@@ -871,7 +873,7 @@ $action = $_REQUEST['action'] ?? '';
 						<td><?php echo $a['jumlahbeli']; ?></td>
 						<td><?php echo $a['hargabeli']; ?></td>
 						<td><?php echo $a['totalpembelian']; ?></td>
-						<td>Edit | Hapus</td>
+						<td><a href="index.php?action=ubahBeli&id=<?php echo $a['IDBeli'];  ?>">Ubah</a> | <a href="index.php?action=hapusBeli&id=<?php echo $a['IDBeli'];  ?>">Hapus</a></td>
 					</tr>
 				</tbody>
 				<?php } ?>
@@ -920,19 +922,7 @@ $action = $_REQUEST['action'] ?? '';
 
 								<input type="date" name="tanggalbeli" class="form-control" data-date-format="DD/MM/YYYY" placeholder="dd/mm/yyyy" required autofocus>
 							</div>
-							<!-- /.input group -->
-	<!--						<div class="input-group date" id="reservationdate" data-target-input="nearest">
-									<input type="text" class="form-control datetimepicker-input" data-target="#reservationdate"/>
-									<div class="input-group-append" data-target="#reservationdate" data-toggle="datetimepicker">
-											<div class="input-group-text"><i class="fa fa-calendar"></i></div>
-									</div>
-							</div> -->
-	<!--						<div class="input-group">
-							<div class="input-group-prepend">
-								<span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
-							</div>
-							<input type="text" class="form-control" data-inputmask-alias="datetime" data-inputmask-inputformat="dd/mm/yyyy" data-mask required>
-						</div>-->
+
 					</div>
 					</div>
 					<div class="form-group row">
@@ -961,6 +951,91 @@ $action = $_REQUEST['action'] ?? '';
 			<!-- /.card-body -->
 			<div class="card-footer">
 				<button type="submit" name="beli" class="btn btn-warning">Tambah</button>
+				<a href="index.php?id=pembelian"<button type="submit" class="btn btn-default float-right">Batal</button></a>
+			</div>
+
+			</form>
+			<!-- /.card-footer-->
+		</div>
+		<!-- /.card -->
+
+	</section>
+<?php } ?>
+
+<!-- UBAH PEMBELIAN -->
+<?php if ('ubahBeli' == $action) {
+$IDBeli = $_REQUEST['id'];
+$ubahBeli = "SELECT * FROM pembelian WHERE IDBeli='{$IDBeli}'";
+$result = mysqli_query($connection, $ubahBeli);
+
+$beli = mysqli_fetch_assoc($result);
+	  ?>
+
+	<section class="content">
+
+		<!-- Default box -->
+		<div class="card card-warning">
+			<div class="card-header">
+				<h3 class="card-title"><?php echo "$page"; ?></h3>
+
+			</div>
+			<div class="card-body">
+
+		<form class="form-horizontal" action="create.php" method="POST">
+					<div class="form-group row">
+						<label for="inputEmail3" class="col-sm-2 col-form-label">Nama barang</label>
+						<div class="col-sm-10">
+			<!--				<input type="text" name="namabeli" class="form-control" id="inputEmail3" placeholder="Nama..." required> -->
+			<select id="kd_desa" class="form-control" name="namabarang" value="<?php echo $beli['namabarang'] ?>">
+				<?php
+
+				$data = mysqli_query($connection, "SELECT * FROM pembelian pem join daftarbarang daf on pem.IDBarang = daf.IDBarang");
+				while ($a = mysqli_fetch_array($data)) {
+
+				 ?>
+					<option value="<?php echo $a['IDBarang'] ?>"><?php echo $a['namabarang'] ?></option>
+					<?php } ?>
+				</select>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="inputPassword3" class="col-sm-2 col-form-label">Tanggal beli</label>
+						<div class="col-sm-10">
+
+							<div class="input-group">
+
+								<input type="date" name="tanggalbeli" class="form-control" data-date-format="DD/MM/YYYY" placeholder="dd/mm/yyyy" value="<?php echo $beli['tanggalbeli'] ?>" required autofocus>
+							</div>
+
+					</div>
+					</div>
+					<div class="form-group row">
+						<label for="inputEmail3" class="col-sm-2 col-form-label">Jumlah beli</label>
+						<div class="col-sm-10">
+							<input type="number" name="jumlahbeli" class="form-control" id="jumlahbeli" onkeyup="perkalian();" value="<?php echo $beli['jumlahbeli']; ?>" required>
+						</div>
+					</div>
+
+					<div class="form-group row">
+						<label for="inputEmail3" class="col-sm-2 col-form-label">Harga beli</label>
+						<div class="col-sm-10">
+							<input type="number" name="hargabeli" class="form-control" id="hargabeli" onkeyup="perkalian();" value="<?php echo $beli['hargabeli'] ?>" required>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="inputEmail3" class="col-sm-2 col-form-label">Total </label>
+						<div class="col-sm-10">
+							<input type="number" name="totalbeli" class="form-control" id="totalbeli" placeholder="Total beli..." value="<?php echo $beli['totalpembelian'] ?>" readonly>
+						</div>
+					</div>
+					<input type="hidden" name="action" value="tambahbeli">
+					<input type="hidden" name="id" value="<?php echo $IDBeli; ?>">
+
+			</div>
+
+			<!-- /.card-body -->
+			<div class="card-footer">
+				<button type="submit" name="beli" class="btn btn-warning">Simpan perubahan</button>
 				<a href="index.php?id=pembelian"<button type="submit" class="btn btn-default float-right">Batal</button></a>
 			</div>
 

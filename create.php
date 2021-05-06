@@ -60,6 +60,7 @@ if ( !$connection ) {
             mysqli_query( $connection, $query );
             header( "location:index.php?id=daftarBarang" );
             }
+
   } else if ('tambahbeli' == $action) {
     $namabarang = $_REQUEST['namabarang'] ?? '';
     $tanggalbeli = $_REQUEST['tanggalbeli'] ?? '';
@@ -67,11 +68,25 @@ if ( !$connection ) {
     $hargabeli = $_REQUEST['hargabeli'] ?? '';
     $totalbeli = $_REQUEST['totalbeli'] ?? '';
 
-    if ($nama && $tanggalbeli && $jumlahbeli && $hargabeli && $totalbeli) {
-      $query = "INSERT INTO pembelian(IDBarang,,password,status) VALUES ('{$nama}','$email','$password','$status')";
+    if ($namabarang && $tanggalbeli && $jumlahbeli && $hargabeli && $totalbeli) {
+      $query = "INSERT INTO pembelian(IDBarang,jumlahbeli,tanggalbeli,hargabeli,totalpembelian) VALUES ('{$namabarang}','$jumlahbeli','$tanggalbeli','$hargabeli','$totalbeli')";
       mysqli_query( $connection, $query );
       header( "location:index.php?id=pembelian" );
     }
-  }
+  } else if ('ubahBeli' == $action) {
+      $IDBeli = $_POST['id'];
+      $namabarang = $_POST['namabarang'];
+      $tanggalbeli = $_POST['tanggalbeli'];
+      $jumlahbeli = $_POST['jumlahbeli'];
+      $hargabeli = $_POST['hargabeli'];
+      $totalbeli = $_POST['totalbeli'];
+
+      if ( $IDBeli && $namabarang && $tanggalbeli && $jumlahbeli && $hargabeli && $totalbeli ) {
+  //        $hashPassword = password_hash( $password, PASSWORD_BCRYPT );
+          $query = "UPDATE pembelian SET namabarang='{$namabarang}', jumlahbeli='{$jumlahbeli}', tanggalbeli='$tanggalbeli', hargabeli='$hargabeli', totalpembelian='$totalbeli' WHERE IDBeli='{$IDBeli}'";
+          mysqli_query( $connection, $query );
+          header( "location:index.php?id=pembelian" );
+          }
+}
 }
  ?>
