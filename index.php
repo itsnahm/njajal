@@ -266,14 +266,21 @@ $action = $_REQUEST['action'] ?? '';
 						<!-- small box -->
 						<div class="small-box bg-info">
 							<div class="inner">
-								<h3>150</h3>
+								<h3>
+<?php
+$query = "SELECT COUNT(*) totalBarang FROM daftarbarang;";
+$result = mysqli_query ($connection, $query);
+$totalBarang = mysqli_fetch_assoc($result);
+echo $totalBarang['totalBarang'];
+ ?>
+								</h3>
 
-								<p>New Orders</p>
+								<p>Total Barang</p>
 							</div>
 							<div class="icon">
 								<i class="ion ion-bag"></i>
 							</div>
-							<a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+							<a href="index.php?id=daftarBarang" class="small-box-footer">Info lengkap <i class="fas fa-arrow-circle-right"></i></a>
 						</div>
 					</div>
 					<!-- ./col -->
@@ -824,10 +831,10 @@ $action = $_REQUEST['action'] ?? '';
 					<tr>
 						<td><?php echo $a['IDJual']; ?></td>
 						<td><?php echo $a['namabarang']; ?></td>
-						<td><?php echo $a['tanggaljual']?></td>
+						<td><?php echo date('d M Y', strtotime($a['tanggaljual']))?></td>
 						<td><?php echo $a['jumlahjual']; ?></td>
-						<td><?php echo $a['hargajual']; ?></td>
-						<td><?php echo $a['totalpenjualan']; ?></td>
+						<td><?php echo "Rp".number_format($a['hargajual']).",-"; ?></td>
+						<td><?php echo "Rp".number_format($a['totalpenjualan']).",-"; ?></td>
 						<td><a href="index.php?action=ubahJual&id=<?php echo $a['IDJual'];  ?>">Ubah</a> | <a href="index.php?action=hapusJual&id=<?php echo $a['IDJual'];  ?>">Hapus</a></td>
 					</tr>
 				</tbody>
@@ -1046,10 +1053,10 @@ $action = $_REQUEST['action'] ?? '';
 					<tr>
 						<td><?php echo $a['IDBeli']; ?></td>
 						<td><?php echo $a['namabarang']; ?></td>
-						<td><?php echo $a['tanggalbeli']?></td>
+						<td><?php echo date('d M Y', strtotime($a['tanggalbeli']))?></td>
 						<td><?php echo $a['jumlahbeli']; ?></td>
-						<td><?php echo $a['hargabeli']; ?></td>
-						<td><?php echo $a['totalpembelian']; ?></td>
+						<td><?php echo "Rp".number_format($a['hargabeli']).",-"; ?></td>
+						<td><?php echo "Rp".number_format($a['totalpembelian']).",-"; ?></td>
 						<td><a href="index.php?action=ubahBeli&id=<?php echo $a['IDBeli'];  ?>">Ubah</a> | <a href="index.php?action=hapusBeli&id=<?php echo $a['IDBeli'];  ?>">Hapus</a></td>
 					</tr>
 				</tbody>
@@ -1242,7 +1249,49 @@ $beli = mysqli_fetch_assoc($result);
 
 			</div>
 			<div class="card-body">
-				Start creating your amazing application!
+				<form method="POST" class="form-inline" action="">
+	<select name="bulan" class="form-control" required="required">
+
+		<option value="1">Januari</option>
+		<option value="2">Februari</option>
+		<option value="3">Maret</option>
+		<option value="4">April</option>
+		<option value="5">Mei</option>
+		<option value="6">Juni</option>
+		<option value="7">Juli</option>
+		<option value="8">Agustus</option>
+		<option value="9">September</option>
+		<option value="10">Oktober</option>
+		<option value="11">November</option>
+		<option value="12">Desember</option>
+	</select>
+	<select class="form-control" name="tahun">
+		<?php
+$mulai= date('Y') - 50;
+for($i = $mulai;$i<$mulai + 100;$i++){
+    $sel = $i == date('Y') ? ' selected="selected"' : '';
+    echo '<option value="'.$i.'"'.$sel.'>'.$i.'</option>';
+}
+?>
+
+	</select>
+	<button class="btn btn-primary" name="filter"><span class="glyphicon glyphicon-search"></span> Cari</button>
+</form>
+<br style="clear:both;"/><br />
+<table id="example1" class="table table-bordered">
+<thead>
+				<tr>
+					<th>No.</th>
+					<th>Nama Barang</th>
+					<th>Bulan</th>
+					<th>Total Pembelian</th>
+					<th>Total Penjualan</th>
+				</tr>
+			</thead>
+			<tbody>
+				<?php include 'filter.php'?>
+			</tbody>
+		</table>
 			</div>
 
 		</div>
@@ -1507,20 +1556,6 @@ $akun = mysqli_fetch_assoc($result);
   });
 </script>
 
-<!--<script>
-
-
-function startCalc(){
-interval = setInterval(“calc()”,1);}
-function calc(){
-a = document.autoSumForm.jumlahbeli.value;
-b = document.autoSumForm.hargabeli.value;
-document.autoSumForm.jumlah.value = (a * 1) * (b * 1);}
-function stopCalc(){
-clearInterval(interval);}
-
-</script> -->
-
 <script>
 function perkalian() {
 		var txtFirstNumberValue = document.getElementById('jumlahbeli').value;
@@ -1540,9 +1575,6 @@ function penjualan() {
 		}
 }
 </script>
-
-
-
 
 </body>
 </html>
