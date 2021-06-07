@@ -869,10 +869,10 @@ echo $totalBarang['totalBarang'];
 			<!--				<input type="text" name="namabeli" class="form-control" id="inputEmail3" placeholder="Nama..." required> -->
 			<select id="kd_desa" class="form-control" name="namabarang">
 					<?php
-					$sql = mysqli_query($connection,"SELECT * FROM daftarbarang");
+					$sql = mysqli_query($connection,"SELECT namabarang FROM daftarbarang daf join pembelian pem on daf.IDBarang = pem.IDBarang GROUP by daf.namabarang");
 					while ($result = mysqli_fetch_array($sql)) {
 					?>
-					<option value="<?php echo $result['IDBarang'] ?>"><?php echo $result['namabarang'] ?></option>
+					<option value="<?php echo $result['namabarang'] ?>"><?php echo $result['namabarang'] ?></option>
 					<?php } ?>
 				</select>
 						</div>

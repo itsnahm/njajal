@@ -7,7 +7,7 @@ if(!ISSET($_POST['filter'])){
 require 'config.php';
 $bulan = 0;
 $tahun = 0;
-$query = mysqli_query($connection, "SELECT namabarang, sum(totalpembelian) as beli FROM daftarbarang daf join pembelian pem on daf.IDBarang = pem.IDBarang WHERE (MONTH(tanggalbeli) = '$bulan') AND (YEAR(tanggalbeli) = '$tahun') ");
+$query = mysqli_query($connection, "SELECT namabarang, sum(totalpembelian) as beli FROM daftarbarang daf join pembelian pem on daf.IDBarang = pem.IDBarang WHERE (MONTH(tanggalbeli) = '$bulan') AND (YEAR(tanggalbeli) = '$tahun')   ");
 $no = 1;
 while($fetch = mysqli_fetch_array($query)){
  ?>
@@ -19,7 +19,7 @@ while($fetch = mysqli_fetch_array($query)){
    <?php
   }
 
-$query = mysqli_query($connection, "SELECT namabarang, sum(totalpenjualan) as jual FROM daftarbarang daf join penjualan pen on daf.IDBarang = pen.IDBarang WHERE (MONTH(tanggaljual) = '$bulan') AND (YEAR(tanggaljual) = '$tahun') ");
+$query = mysqli_query($connection, "SELECT namabarang, sum(totalpenjualan) as jual FROM daftarbarang daf join penjualan pen on daf.IDBarang = pen.IDBarang WHERE (MONTH(tanggaljual) = '$bulan') AND (YEAR(tanggaljual) = '$tahun')  ");
 while($fetch = mysqli_fetch_array($query)){
     ?>
    <td><?php echo $fetch['jual']; ?></td>
@@ -37,25 +37,22 @@ if(ISSET($_POST['filter'])){
   $bulan = $_POST['bulan'];
   $tahun = $_POST['tahun'];
   $no = 1;
-//  $beli = mysqli_query($connection, "SELECT daftarbarang, sum(totalpembelian) as beli from daftarbarang daf join pembelian pem on daf.IDBarang = pem.IDBarang WHERE MONTH(tanggalbeli) = '$bulan' AND YEAR(tanggalbeli) = '$tahun' ");
 
-//  $jual = mysqli_query($connection, "SELECT daftarbarang, sum(totalpembelian) as jual from daftarbarang daf join penjualan pen on daf.IDBarang = pen.IDBarang WHERE MONTH(tanggaljual) = $bulan");
-//  $query = mysqli_query($connection, "SELECT * FROM datfarbarang daf join pembelian pem join penjualan pen on daf.IDBarang = pem.IDBarang = pen.IDBarang WHERE MONTH(tanggalbeli) = '$bulan' and MONTH(tanggaljual) = '$bulan'");
-$query = mysqli_query($connection, "SELECT namabarang, sum(totalpembelian) as beli FROM daftarbarang daf join pembelian pem on daf.IDBarang = pem.IDBarang WHERE (MONTH(tanggalbeli) = '$bulan') AND (YEAR(tanggalbeli) = '$tahun') ");
+$query = mysqli_query($connection, "SELECT namabarang, tanggalbeli, sum(totalpembelian) as beli, sum(totalpenjualan) as jual FROM daftarbarang daf JOIN pembelian pem ON pem.IDBarang = daf.IDBarang JOIN penjualan pen ON pen.IDBarang = daf.IDBarang  WHERE MONTH(tanggalbeli) = '$bulan' AND YEAR(tanggalbeli) = '$tahun'  GROUP BY namabarang ");
   while($fetch = mysqli_fetch_array($query)){
     ?>
   <tr>
     <td><?php echo $no++ ?></td>
     <td><?php echo $fetch['namabarang'] ?></td>
-      <td><?php echo date('M d, Y', strtotime($bulan))?></td>
+      <td><?php echo date('M', strtotime($fetch['tanggalbeli']))?></td>
       <td><?php echo "Rp".number_format($fetch['beli']).",-"; ?></td>
-    <?php }
-    $query = mysqli_query($connection, "SELECT namabarang, sum(totalpenjualan) as jual FROM daftarbarang daf join penjualan pen on daf.IDBarang = pen.IDBarang WHERE (MONTH(tanggaljual) = '$bulan') AND (YEAR(tanggaljual) = '$tahun') ");
-    while($fetch = mysqli_fetch_array($query)){
+    <?php //}
+  //  $query = mysqli_query($connection, "SELECT namabarang, sum(totalpenjualan) as jual FROM daftarbarang daf join penjualan pen on daf.IDBarang = pen.IDBarang WHERE (MONTH(tanggaljual) = '$bulan') AND (YEAR(tanggaljual) = '$tahun') GROUP BY daf.IDBarang");
+  //  while($fetch = mysqli_fetch_array($query)){
         ?>
       <td><?php echo "Rp".number_format($fetch['jual']).",-"; ?></td>
     </tr>
     <?php
-    }
+}
 }
  ?>
