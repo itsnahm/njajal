@@ -1271,6 +1271,8 @@ $mulai= date('Y') - 50;
 for($i = $mulai;$i<$mulai + 100;$i++){
     $sel = $i == date('Y') ? ' selected="selected"' : '';
     echo '<option value="'.$i.'"'.$sel.'>'.$i.'</option>';
+
+
 }
 ?>
 
