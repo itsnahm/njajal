@@ -91,6 +91,7 @@ $action = $_REQUEST['action'] ?? '';
 						} elseif ( 'editSalesman' == $action ) {
 								echo "Edit Salesman";
 						}
+						$no = 1;
 				?>
 
 		</span>
@@ -598,7 +599,7 @@ echo $totalBarang['totalBarang'];
 					<table id="example1" class="table table-bordered table-striped">
 						<thead>
 						<tr>
-							<th>ID Barang</th>
+							<th>No</th>
 							<th>Nama Barang</th>
 							<th>Satuan</th>
 							<th>Kategori</th>
@@ -608,13 +609,13 @@ echo $totalBarang['totalBarang'];
 						</thead>
 						<?php
 
-						$data = mysqli_query($connection, "SELECT * FROM daftarbarang");
+						$data = mysqli_query($connection, "SELECT * FROM daftarbarang ORDER BY IDBarang DESC");
 						while ($a = mysqli_fetch_array($data)) {
 
 						 ?>
 						<tbody>
 						<tr>
-							<td><?php echo $a['IDBarang']; ?></td>
+							<td><?php echo $no++ ?></td>
 							<td><?php echo $a['namabarang']; ?></td>
 							<td><?php echo $a['satuan']; ?></td>
 							<td><?php echo $a['kategori']?></td>
@@ -813,7 +814,7 @@ echo $totalBarang['totalBarang'];
 				<table id="example1" class="table table-bordered table-striped">
 					<thead>
 					<tr>
-						<th>ID Penjualan</th>
+						<th>No</th>
 						<th>Nama Barang</th>
 						<th>Tanggal Jual</th>
 						<th>Jumlah Penjualan</th>
@@ -823,13 +824,13 @@ echo $totalBarang['totalBarang'];
 					</tr>
 					</thead>
 					<?php
-					$data = mysqli_query($connection, "SELECT * FROM penjualan pen join daftarbarang daf on pen.IDBarang = daf.IDBarang");
+					$data = mysqli_query($connection, "SELECT * FROM penjualan pen join daftarbarang daf on pen.IDBarang = daf.IDBarang ORDER BY IDJual DESC");
 					while ($a = mysqli_fetch_array($data)) {
 
 					 ?>
 					<tbody>
 					<tr>
-						<td><?php echo $a['IDJual']; ?></td>
+						<td><?php echo $no++ ?></td>
 						<td><?php echo $a['namabarang']; ?></td>
 						<td><?php echo date('d M Y', strtotime($a['tanggaljual']))?></td>
 						<td><?php echo $a['jumlahjual']; ?></td>
@@ -869,10 +870,10 @@ echo $totalBarang['totalBarang'];
 			<!--				<input type="text" name="namabeli" class="form-control" id="inputEmail3" placeholder="Nama..." required> -->
 			<select id="kd_desa" class="form-control" name="namabarang">
 					<?php
-					$sql = mysqli_query($connection,"SELECT namabarang FROM daftarbarang daf join pembelian pem on daf.IDBarang = pem.IDBarang GROUP by daf.namabarang");
+					$sql = mysqli_query($connection,"SELECT * FROM daftarbarang daf join pembelian pem on daf.IDBarang = pem.IDBarang GROUP by daf.namabarang");
 					while ($result = mysqli_fetch_array($sql)) {
 					?>
-					<option value="<?php echo $result['namabarang'] ?>"><?php echo $result['namabarang'] ?></option>
+					<option value="<?php echo $result['IDBarang'] ?>"><?php echo $result['namabarang'] ?></option>
 					<?php } ?>
 				</select>
 						</div>
@@ -1034,7 +1035,7 @@ echo $totalBarang['totalBarang'];
 				<table id="example1" class="table table-bordered table-striped">
 					<thead>
 					<tr>
-						<th>ID Pembelian</th>
+						<th>No</th>
 						<th>Nama Barang</th>
 						<th>Tanggal Beli</th>
 						<th>Jumlah beli</th>
@@ -1045,13 +1046,13 @@ echo $totalBarang['totalBarang'];
 					</thead>
 					<?php
 
-					$data = mysqli_query($connection, "SELECT * FROM pembelian pem join daftarbarang daf on pem.IDBarang = daf.IDBarang");
+					$data = mysqli_query($connection, "SELECT * FROM pembelian pem join daftarbarang daf on pem.IDBarang = daf.IDBarang ORDER BY IDBeli DESC");
 					while ($a = mysqli_fetch_array($data)) {
 
 					 ?>
 					<tbody>
 					<tr>
-						<td><?php echo $a['IDBeli']; ?></td>
+						<td><?php echo $no++; ?></td>
 						<td><?php echo $a['namabarang']; ?></td>
 						<td><?php echo date('d M Y', strtotime($a['tanggalbeli']))?></td>
 						<td><?php echo $a['jumlahbeli']; ?></td>
@@ -1286,6 +1287,7 @@ for($i = $mulai;$i<$mulai + 100;$i++){
 					<th>No.</th>
 					<th>Nama Barang</th>
 					<th>Bulan</th>
+					<th>Sisa barang</th>
 					<th>Total Pembelian</th>
 					<th>Total Penjualan</th>
 				</tr>
@@ -1320,7 +1322,7 @@ for($i = $mulai;$i<$mulai + 100;$i++){
 					<table id="example1" class="table table-bordered table-striped">
 						<thead>
 						<tr>
-							<th>ID Akun</th>
+							<th>No</th>
 							<th>Nama</th>
 							<th>Email</th>
 							<th>Status</th>
@@ -1329,13 +1331,13 @@ for($i = $mulai;$i<$mulai + 100;$i++){
 						</thead>
 						<?php
 
-						$data = mysqli_query($connection, "SELECT * FROM akun");
+						$data = mysqli_query($connection, "SELECT * FROM akun ORDER BY IDAkun DESC");
 						while ($a = mysqli_fetch_array($data)) {
 
 						 ?>
 						<tbody>
 						<tr>
-							<td><?php echo $a['IDAkun']; ?></td>
+							<td><?php echo $no++ ?></td>
 							<td><?php echo $a['nama']; ?></td>
 							<td><?php echo $a['email']; ?></td>
 							<td><?php echo $a['status']?></td>

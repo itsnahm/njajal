@@ -16,18 +16,13 @@ while($fetch = mysqli_fetch_array($query)){
    <td><?php echo $fetch['namabarang'] ?></td>
    <td></td>
    <td><?php echo $fetch['beli']; ?></td>
-   <?php
-  }
 
-$query = mysqli_query($connection, "SELECT namabarang, sum(totalpenjualan) as jual FROM daftarbarang daf join penjualan pen on daf.IDBarang = pen.IDBarang WHERE (MONTH(tanggaljual) = '$bulan') AND (YEAR(tanggaljual) = '$tahun')  ");
-while($fetch = mysqli_fetch_array($query)){
-    ?>
-   <td><?php echo $fetch['jual']; ?></td>
+   <td><?php //echo $fetch['jual']; ?></td>
  <tr>
- <?php } ?>
 
 
 <?php
+}
 }
 ?>
 
@@ -38,18 +33,18 @@ if(ISSET($_POST['filter'])){
   $tahun = $_POST['tahun'];
   $no = 1;
 
-$query = mysqli_query($connection, "SELECT namabarang, tanggalbeli, sum(totalpembelian) as beli, sum(totalpenjualan) as jual FROM daftarbarang daf JOIN pembelian pem ON pem.IDBarang = daf.IDBarang JOIN penjualan pen ON pen.IDBarang = daf.IDBarang  WHERE MONTH(tanggalbeli) = '$bulan' AND YEAR(tanggalbeli) = '$tahun'  GROUP BY namabarang ");
+$query = mysqli_query($connection, "SELECT namabarang, jumlahbarang, tanggalbeli, sum(totalpembelian) as beli, sum(totalpenjualan) as jual
+FROM daftarbarang daf JOIN pembelian pem ON pem.IDBarang = daf.IDBarang
+JOIN penjualan pen ON pen.IDBarang = daf.IDBarang
+WHERE MONTH(tanggalbeli) = '$bulan' AND YEAR(tanggalbeli) = '$tahun' GROUP BY namabarang ");
   while($fetch = mysqli_fetch_array($query)){
     ?>
   <tr>
     <td><?php echo $no++ ?></td>
     <td><?php echo $fetch['namabarang'] ?></td>
       <td><?php echo date('M', strtotime($fetch['tanggalbeli']))?></td>
+      <td><?php echo $fetch['jumlahbarang'] ?></td>
       <td><?php echo "Rp".number_format($fetch['beli']).",-"; ?></td>
-    <?php //}
-  //  $query = mysqli_query($connection, "SELECT namabarang, sum(totalpenjualan) as jual FROM daftarbarang daf join penjualan pen on daf.IDBarang = pen.IDBarang WHERE (MONTH(tanggaljual) = '$bulan') AND (YEAR(tanggaljual) = '$tahun') GROUP BY daf.IDBarang");
-  //  while($fetch = mysqli_fetch_array($query)){
-        ?>
       <td><?php echo "Rp".number_format($fetch['jual']).",-"; ?></td>
     </tr>
     <?php
