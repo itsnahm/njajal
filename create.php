@@ -74,19 +74,17 @@ if ( !$connection ) {
       header( "location:index.php?id=pembelian" );
     }
   } else if ('ubahBeli' == $action) {
-      $IDBeli = $_POST['id'];
-      $namabarang = $_POST['namabarang'];
-      $tanggalbeli = $_POST['tanggalbeli'];
-      $jumlahbeli = $_POST['jumlahbeli'];
-      $hargabeli = $_POST['hargabeli'];
-      $totalbeli = $_POST['totalbeli'];
+    $IDBeli = $_POST['id'];
+    $namabarang = $_POST['namabarang'];
+    $tanggalbeli = $_POST['tanggalbeli'];
+    $jumlahbeli = $_POST['jumlahbeli'];
+    $hargabeli = $_POST['hargabeli'];
+    $totalbeli = $_POST['totalbeli'];
+  } if ($namabarang && $tanggalbeli && $jumlahbeli && $hargabeli && $totalbeli) {
+    $query = "UPDATE pembelian SET IDBarang='{$namabarang}', jumlahbeli='{$jumlahbeli}', tanggalbeli='$tanggalbeli', hargabeli='$hargabeli', totalpembelian='$totalbeli' WHERE IDBeli='{$IDBeli}'";
+    mysqli_query( $connection, $query );
+    header( "location:index.php?id=pembelian" );
 
-      if ( $IDBeli && $namabarang && $tanggalbeli && $jumlahbeli && $hargabeli && $totalbeli ) {
-  //        $hashPassword = password_hash( $password, PASSWORD_BCRYPT );
-          $query = "UPDATE pembelian SET IDBarang='{$namabarang}', jumlahbeli='{$jumlahbeli}', tanggalbeli='$tanggalbeli', hargabeli='$hargabeli', totalpembelian='$totalbeli' WHERE IDBeli='{$IDBeli}'";
-          mysqli_query( $connection, $query );
-          header( "location:index.php?id=pembelian" );
-          }
 
   } else if ('tambahjual' == $action) {
     $namabarang = $_REQUEST['namabarang'] ?? '';

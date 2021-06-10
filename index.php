@@ -873,7 +873,7 @@ echo $totalBarang['totalBarang'];
 					$sql = mysqli_query($connection,"SELECT * FROM daftarbarang daf join pembelian pem on daf.IDBarang = pem.IDBarang GROUP by daf.namabarang");
 					while ($result = mysqli_fetch_array($sql)) {
 					?>
-					<option value="<?php echo $result['IDBarang'] ?>"><?php echo $result['namabarang'] ?></option>
+					<option value="<?php echo $result['IDBarang'] ?>"><?php echo $result['namabarang'] ?><?php echo " (Sisa barang = ".$result['jumlahbarang']. ")" ?></option>
 					<?php } ?>
 				</select>
 						</div>
@@ -951,10 +951,10 @@ echo $totalBarang['totalBarang'];
 			<!--				<input type="text" name="namabeli" class="form-control" id="inputEmail3" placeholder="Nama..." required> -->
 			<select id="kd_desa" class="form-control" name="namabarang">
 					<?php
-					$sql = mysqli_query($connection,"SELECT * FROM daftarbarang");
+					$sql = mysqli_query($connection,"SELECT * FROM daftarbarang daf join pembelian pem on daf.IDBarang = pem.IDBarang GROUP by daf.namabarang");
 					while ($result = mysqli_fetch_array($sql)) {
 					?>
-					<option value="<?php echo $result['IDBarang'] ?>"><?php echo $result['namabarang'] ?></option>
+					<option value="<?php echo $result['IDBarang'] ?>"><?php echo $result['namabarang'] ?><?php echo " (Sisa barang = ".$result['jumlahbarang']. ")" ?></option>
 					<?php } ?>
 				</select>
 						</div>
@@ -1212,7 +1212,7 @@ $beli = mysqli_fetch_assoc($result);
 							<input type="number" name="totalbeli" class="form-control" id="totalbeli" placeholder="Total beli..." value="<?php echo $beli['totalpembelian'] ?>" readonly>
 						</div>
 					</div>
-					<input type="hidden" name="action" value="tambahbeli">
+					<input type="hidden" name="action" value="ubahBeli">
 					<input type="hidden" name="id" value="<?php echo $IDBeli; ?>">
 
 			</div>
