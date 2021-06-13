@@ -811,7 +811,7 @@ echo $totalBarang['totalBarang'];
 
 			</div>
 			<div class="card-body">
-				<table id="example1" class="table table-bordered table-striped">
+				<table id="example1" class="table table-bordered">
 					<thead>
 					<tr>
 						<th>No</th>
@@ -1032,7 +1032,7 @@ echo $totalBarang['totalBarang'];
 
 			</div>
 			<div class="card-body">
-				<table id="example1" class="table table-bordered table-striped">
+				<table id="example1" class="table table-bordered">
 					<thead>
 					<tr>
 						<th>No</th>
@@ -1287,9 +1287,12 @@ for($i = $mulai;$i<$mulai + 100;$i++){
 					<th>No.</th>
 					<th>Nama Barang</th>
 					<th>Bulan</th>
+					<th>Terjual</th>
 					<th>Sisa barang</th>
-					<th>Total Pembelian</th>
-					<th>Total Penjualan</th>
+					<th>Harga pokok</th>
+					<th>Nilai pers. akhir</th>
+					<th>HPP</th>
+					<th>Laba kotor</th>
 				</tr>
 			</thead>
 			<tbody>
