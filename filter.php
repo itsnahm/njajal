@@ -36,21 +36,21 @@ if(ISSET($_POST['filter'])){
   $totallabakotor = 0;
   $totalHPP = 0;
 
-$query = mysqli_query($connection, "SELECT daftarbarang.IDBarang as ID, namabarang,
-tanggalbeli,
-sum(jumlahbeli) as jumlahBeli,
-(SELECT sum(jumlahjual) from penjualan JOIN daftarbarang on daftarbarang.IDBarang = penjualan.IDBarang WHERE month(tanggaljual) = '$bulan' AND YEAR(tanggaljual) = '$tahun' AND penjualan.IDBarang = ID ) as jumlahJual,
-(sum(pembelian.jumlahbeli)-(SELECT sum(jumlahjual) from penjualan JOIN daftarbarang on daftarbarang.IDBarang = penjualan.IDBarang WHERE month(tanggaljual) = '$bulan' AND YEAR(tanggaljual) = '$tahun' AND penjualan.IDBarang = ID )) as sisaBarang,
-(sum(totalpembelian)/sum(pembelian.jumlahbeli)) as hargaPokok,
-((sum(totalpembelian)/sum(pembelian.jumlahbeli))*(sum(pembelian.jumlahbeli)-(SELECT sum(jumlahjual) from penjualan JOIN daftarbarang on daftarbarang.IDBarang = penjualan.IDBarang WHERE month(tanggaljual) = '$bulan' AND YEAR(tanggaljual) = '$tahun' AND penjualan.IDBarang = ID ))) as nilaiAkhir,
-((sum(totalpembelian))-((sum(totalpembelian)/sum(pembelian.jumlahbeli))*(sum(pembelian.jumlahbeli)-(SELECT sum(jumlahjual) from penjualan JOIN daftarbarang on daftarbarang.IDBarang = penjualan.IDBarang WHERE month(tanggaljual) = '$bulan' AND YEAR(tanggaljual) = $tahun AND penjualan.IDBarang = ID )))) as HPP,
-((SELECT sum(totalpenjualan) FROM penjualan WHERE penjualan.IDBarang = ID and month(tanggaljual) = '$bulan' AND YEAR(tanggaljual) = '$tahun') - ((sum(totalpembelian))-((sum(totalpembelian)/sum(pembelian.jumlahbeli))*(sum(pembelian.jumlahbeli)-(SELECT sum(jumlahjual) from penjualan JOIN daftarbarang on daftarbarang.IDBarang = penjualan.IDBarang WHERE month(tanggaljual) = '$bulan' AND YEAR(tanggaljual) = '$tahun' AND penjualan.IDBarang = ID ))))) as labaKotor,
-(SELECT sum(jumlahjual) from penjualan WHERE month(tanggaljual) = '$bulan' AND YEAR(tanggaljual) = '$tahun' AND penjualan.IDBarang = ID ) as jumlahJual
+$query = mysqli_query($connection, "SELECT IDBarang as ID, namabarang, (SELECT sum(jumlahbeli) from pembelian WHERE IDBarang = ID and month(tanggalbeli)='$bulan') as jumlahBeli,
+(SELECT sum(jumlahjual) from penjualan WHERE IDBarang = ID AND month(tanggaljual)='$bulan') as jumlahJual,
+
+((SELECT sum(jumlahbeli) from pembelian WHERE IDBarang = ID AND month(tanggalbeli)<='$bulan')-(SELECT sum(jumlahjual) from penjualan WHERE IDBarang = ID AND month(tanggaljual)<='$bulan')) as sisaBarang,
+
+((SELECT sum(totalpembelian) from pembelian WHERE IDBarang = ID and month(tanggalbeli)<='$bulan')/(SELECT sum(jumlahbeli) from pembelian WHERE IDBarang = ID AND month(tanggalbeli)<='$bulan')) as hargaPokok,
+
+(((SELECT sum(totalpembelian) from pembelian WHERE IDBarang = ID and month(tanggalbeli)<='$bulan')/(SELECT sum(jumlahbeli) from pembelian WHERE IDBarang = ID AND month(tanggalbeli)<='$bulan'))*((SELECT sum(jumlahbeli) from pembelian WHERE IDBarang = ID AND month(tanggalbeli)<='$bulan')-(SELECT sum(jumlahjual) from penjualan WHERE IDBarang = ID AND month(tanggaljual)<='$bulan'))) as nilaiAkhir,
+
+((SELECT sum(jumlahjual) from penjualan WHERE IDBarang = ID AND month(tanggaljual)='$bulan')*(SELECT sum(totalpembelian) from pembelian WHERE IDBarang = ID and month(tanggalbeli)<='$bulan')/(SELECT sum(jumlahbeli) from pembelian WHERE IDBarang = ID and month(tanggalbeli)<='$bulan')) as HPP,
+
+((SELECT sum(totalpenjualan) from penjualan WHERE IDBarang = ID and month(tanggaljual)='$bulan')-((SELECT sum(jumlahjual) from penjualan WHERE IDBarang = ID AND month(tanggaljual)='$bulan')*(SELECT sum(totalpembelian) from pembelian WHERE IDBarang = ID and month(tanggalbeli)<='$bulan')/(SELECT sum(jumlahbeli) from pembelian WHERE IDBarang = ID and month(tanggalbeli)<='$bulan'))) as labaKotor
+
 FROM daftarbarang
-JOIN pembelian
-ON daftarbarang.IDBarang = pembelian.IDBarang
-WHERE month(tanggalbeli) = '$bulan' AND YEAR(tanggalbeli) = '$tahun'
-GROUP BY daftarbarang.IDBarang
+GROUP BY IDBarang
 ");
   while($fetch = mysqli_fetch_array($query)){
 
@@ -62,9 +62,9 @@ GROUP BY daftarbarang.IDBarang
 
     <td><?php echo $no++ ?></td>
     <td><?php echo $fetch['namabarang'] ?></td>
-      <td><?php echo date('M', strtotime($fetch['tanggalbeli']))?></td>
-      <td><?php echo $fetch['jumlahJual'] ?></td>
-      <td><?php echo $fetch['sisaBarang']; ?></td>
+      <td><?php echo number_format($fetch['jumlahBeli'])?></td>
+      <td><?php echo number_format($fetch['jumlahJual']) ?></td>
+      <td><?php echo number_format($fetch['sisaBarang']); ?></td>
       <td><?php echo "Rp".number_format($fetch['hargaPokok']).",-"; ?></td>
       <td><?php echo "Rp".number_format($fetch['nilaiAkhir']).",-"; ?></td>
       <td><?php echo "Rp".number_format($fetch['HPP']).",-"; ?></td>
@@ -85,8 +85,5 @@ GROUP BY daftarbarang.IDBarang
     <?php
 
 }
-//SELECT namabarang, jumlahbarang, tanggalbeli, sum(totalpembelian) as beli, sum(totalpenjualan) as jual
-//FROM daftarbarang daf JOIN pembelian pem ON pem.IDBarang = daf.IDBarang
-//JOIN penjualan pen ON pen.IDBarang = daf.IDBarang
-//WHERE MONTH(tanggalbeli) = '$bulan' AND YEAR(tanggalbeli) = '$tahun' GROUP BY namabarang
+
  ?>
