@@ -6,7 +6,7 @@ if (!isset($_SESSION["email"])) {
 	die();
 }
 
-$id_user=$_SESSION["IDAkun"];
+$ID=$_SESSION["IDAkun"];
 $nama=$_SESSION["nama"];
 $email=$_SESSION["email"];
 $status=$_SESSION["status"];
@@ -126,7 +126,7 @@ $action = $_REQUEST['action'] ?? '';
   <!-- Main Sidebar Container -->
   <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
-    <a href="index3.html" class="brand-link">
+    <a href="index.php" class="brand-link">
       <img src="theme/dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
       <span class="brand-text font-weight-light">Putra HM 4 Elektronik</span>
     </a>
@@ -199,6 +199,7 @@ $action = $_REQUEST['action'] ?? '';
             </a>
 
           </li>
+					<?php if ('Owner' == $status) {?>
           <li class="nav-item">
             <a href="index.php?id=laporan" class="nav-link">
               <i class="nav-icon fas fa-tree"></i>
@@ -209,6 +210,8 @@ $action = $_REQUEST['action'] ?? '';
             </a>
 
           </li>
+				<?php } ?>
+				<?php if ('Owner' == $status) { ?>
           <li class="nav-item">
             <a href="index.php?id=akun" class="nav-link">
               <i class="nav-icon fas fa-edit"></i>
@@ -219,6 +222,8 @@ $action = $_REQUEST['action'] ?? '';
             </a>
 
           </li>
+				<?php } ?>
+
           <li class="nav-item">
             <a href="logout.php" class="nav-link">
               <i class="nav-icon far fa-circle text-danger"></i>
@@ -268,6 +273,7 @@ $action = $_REQUEST['action'] ?? '';
 						<div class="small-box bg-info">
 							<div class="inner">
 								<h3>
+
 <?php
 $query = "SELECT COUNT(*) totalBarang FROM daftarbarang;";
 $result = mysqli_query ($connection, $query);
@@ -579,11 +585,12 @@ echo $totalBarang['totalBarang'];
 						<th>Jumlah Penjualan</th>
 						<th>Harga Jual</th>
 						<th>Total Harga</th>
+						<th>Aktor</th>
 						<th>Aksi</th>
 					</tr>
 					</thead>
 					<?php
-					$data = mysqli_query($connection, "SELECT * FROM penjualan pen join daftarbarang daf on pen.IDBarang = daf.IDBarang ORDER BY IDJual DESC");
+					$data = mysqli_query($connection, "SELECT * FROM penjualan pen join daftarbarang daf on pen.IDBarang = daf.IDBarang JOIN akun ak ON pen.IDAkun = ak.IDAkun ORDER BY IDJual DESC");
 					while ($a = mysqli_fetch_array($data)) {
 
 					 ?>
@@ -595,6 +602,7 @@ echo $totalBarang['totalBarang'];
 						<td><?php echo $a['jumlahjual']; ?></td>
 						<td><?php echo "Rp".number_format($a['hargajual']).",-"; ?></td>
 						<td><?php echo "Rp".number_format($a['totalpenjualan']).",-"; ?></td>
+						<td><?php echo $a['nama'] ?></td>
 						<td><a href="index.php?action=ubahJual&id=<?php echo $a['IDJual'];  ?>">Ubah</a> | <a href="index.php?action=hapusJual&id=<?php echo $a['IDJual'];  ?>">Hapus</a></td>
 					</tr>
 				</tbody>
@@ -668,6 +676,7 @@ echo $totalBarang['totalBarang'];
 						</div>
 					</div>
 					<input type="hidden" name="action" value="tambahjual">
+					<input type="hidden" name="pengguna" value="<?php echo $ID; ?>">
 
 			</div>
 
@@ -710,7 +719,7 @@ echo $totalBarang['totalBarang'];
 			<!--				<input type="text" name="namabeli" class="form-control" id="inputEmail3" placeholder="Nama..." required> -->
 			<select id="kd_desa" class="form-control" name="namabarang">
 					<?php
-					$sql = mysqli_query($connection,"SELECT * FROM daftarbarang daf join pembelian pem on daf.IDBarang = pem.IDBarang GROUP by daf.namabarang");
+					$sql = mysqli_query($connection,"SELECT * FROM daftarbarang daf join pembelian pem on daf.IDBarang = pem.IDBarang  GROUP by daf.namabarang");
 					while ($result = mysqli_fetch_array($sql)) {
 					?>
 					<option value="<?php echo $result['IDBarang'] ?>"><?php echo $result['namabarang'] ?><?php echo " (Sisa barang = ".$result['jumlahbarang']. ")" ?></option>
@@ -750,6 +759,7 @@ echo $totalBarang['totalBarang'];
 					</div>
 					<input type="hidden" name="action" value="ubahJual">
 					<input type="hidden" name="id" value="<?php echo $IDJual; ?>">
+					<input type="hidden" name="pengguna" value="<?php echo $ID; ?>">
 
 			</div>
 
@@ -800,12 +810,13 @@ echo $totalBarang['totalBarang'];
 						<th>Jumlah beli</th>
 						<th>Harga beli</th>
 						<th>Total harga</th>
+						<th>Aktor</th>
 						<th>Aksi</th>
 					</tr>
 					</thead>
 					<?php
 
-					$data = mysqli_query($connection, "SELECT * FROM pembelian pem join daftarbarang daf on pem.IDBarang = daf.IDBarang ORDER BY IDBeli DESC");
+					$data = mysqli_query($connection, "SELECT * FROM pembelian pem join daftarbarang daf on pem.IDBarang = daf.IDBarang JOIN akun ak on pem.IDAkun = ak.IDAkun ORDER BY IDBeli DESC");
 					while ($a = mysqli_fetch_array($data)) {
 
 					 ?>
@@ -817,6 +828,7 @@ echo $totalBarang['totalBarang'];
 						<td><?php echo $a['jumlahbeli']; ?></td>
 						<td><?php echo "Rp".number_format($a['hargabeli']).",-"; ?></td>
 						<td><?php echo "Rp".number_format($a['totalpembelian']).",-"; ?></td>
+						<td><?php echo $a['nama']; ?></td>
 						<td><a href="index.php?action=ubahBeli&id=<?php echo $a['IDBeli'];  ?>">Ubah</a> | <a href="index.php?action=hapusBeli&id=<?php echo $a['IDBeli'];  ?>">Hapus</a></td>
 					</tr>
 				</tbody>
@@ -888,6 +900,7 @@ echo $totalBarang['totalBarang'];
 							<input type="number" name="totalbeli" class="form-control" id="totalbeli" placeholder="Total beli..." readonly>
 						</div>
 					</div>
+					<input type="hidden" name="pengguna" value="<?php echo $ID; ?>">
 					<input type="hidden" name="action" value="tambahbeli">
 
 			</div>
@@ -973,6 +986,7 @@ $beli = mysqli_fetch_assoc($result);
 					</div>
 					<input type="hidden" name="action" value="ubahBeli">
 					<input type="hidden" name="id" value="<?php echo $IDBeli; ?>">
+					<input type="hidden" name="pengguna" value="<?php echo $ID; ?>">
 
 			</div>
 
@@ -998,6 +1012,7 @@ $beli = mysqli_fetch_assoc($result);
 										header( "location:index.php?id=pembelian" );
 						}?>
 
+<?php if ('Owner' == $status) {?>
 <!--LAPORAN UANG!! -->
 <?php if ('laporan' == $id) { ?>
 	<section class="content">
@@ -1065,11 +1080,12 @@ for($i = $mulai;$i<$mulai + 100;$i++){
 		<!-- /.card -->
 	</section>
 <?php } ?>
+<?php } ?>
 
+<?php if ('Owner' == $status) {?>
 <!-- AKUN !!!!!!!!!!!!!!!-->
 	<?php if ('akun' == $id) { ?>
 		<section class="content">
-
 			<!-- Default box -->
 			<div class="card">
 				<div class="card-header">
@@ -1118,6 +1134,7 @@ for($i = $mulai;$i<$mulai + 100;$i++){
 
 		</section>
 	<?php } ?>
+
 
 	<!-- TAMBAH AKUN !!!!!!!!!!!!!!!-->
 		<?php if ('tambahAkun' == $id) { ?>
@@ -1251,6 +1268,7 @@ $akun = mysqli_fetch_assoc($result);
                         $result = mysqli_query( $connection, $hapus );
                         header( "location:index.php?id=akun" );
                 }?>
+<?php } ?>
 
   </div>
   <!-- /.content-wrapper -->
