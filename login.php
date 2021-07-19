@@ -35,7 +35,7 @@ if(isset($_SESSION['email'])){ // Jika session username ada berarti dia sudah lo
 
       <form action="login-action.php" method="POST">
         <div class="input-group mb-3">
-          <input type="email" name="email" class="form-control" placeholder="Email">
+          <input type="email" name="email" class="form-control" placeholder="Email" required>
           <div class="input-group-append">
             <div class="input-group-text">
               <span class="fas fa-envelope"></span>
@@ -43,7 +43,7 @@ if(isset($_SESSION['email'])){ // Jika session username ada berarti dia sudah lo
           </div>
         </div>
         <div class="input-group mb-3">
-          <input type="password" name="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+          <input type="password" name="password" class="form-control" id="exampleInputPassword1" placeholder="Password" required>
           <div class="input-group-append">
             <div class="input-group-text">
               <span class="fas fa-lock"></span>

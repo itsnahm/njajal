@@ -335,6 +335,16 @@ echo $totalBarang['totalBarang'];
 							<a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
 						</div>
 					</div>
+
+<div class="col-lg-3 col-6">
+					<a href="index.php?id=tambahBarang"><button type="button" class="btn btn-block btn-danger">+ Tambah barang baru</button></a>
+</div>
+<div class="col-lg-3 col-6">
+				<a href="index.php?id=tambahBeli"><button type="button" class="btn btn-block btn-warning">+ Tambah pembelian baru</button></a>
+</div>
+<div class="col-lg-3 col-6">
+					<a href="index.php?id=tambahJual"><button type="button" class="btn btn-block btn-success">+ Tambah penjualan baru</button></a>
+</div>
 					<!-- ./col -->
 				</div>
 
