@@ -67,9 +67,10 @@ if ( !$connection ) {
     $jumlahbeli = $_REQUEST['jumlahbeli'] ?? '';
     $hargabeli = $_REQUEST['hargabeli'] ?? '';
     $totalbeli = $_REQUEST['totalbeli'] ?? '';
+    $IDAkun = $_REQUEST['pengguna'];
 
-    if ($namabarang && $tanggalbeli && $jumlahbeli && $hargabeli && $totalbeli) {
-      $query = "INSERT INTO pembelian(IDBarang,jumlahbeli,tanggalbeli,hargabeli,totalpembelian) VALUES ('{$namabarang}','$jumlahbeli','$tanggalbeli','$hargabeli','$totalbeli')";
+    if ($namabarang && $tanggalbeli && $jumlahbeli && $hargabeli && $totalbeli && $IDAkun) {
+      $query = "INSERT INTO pembelian(IDBarang,jumlahbeli,tanggalbeli,hargabeli,totalpembelian,IDAkun) VALUES ('{$namabarang}','$jumlahbeli','$tanggalbeli','$hargabeli','$totalbeli','$IDAkun')";
       mysqli_query( $connection, $query );
       header( "location:index.php?id=pembelian" );
     }
@@ -80,8 +81,9 @@ if ( !$connection ) {
     $jumlahbeli = $_POST['jumlahbeli'];
     $hargabeli = $_POST['hargabeli'];
     $totalbeli = $_POST['totalbeli'];
-  } if ($namabarang && $tanggalbeli && $jumlahbeli && $hargabeli && $totalbeli) {
-    $query = "UPDATE pembelian SET IDBarang='{$namabarang}', jumlahbeli='{$jumlahbeli}', tanggalbeli='$tanggalbeli', hargabeli='$hargabeli', totalpembelian='$totalbeli' WHERE IDBeli='{$IDBeli}'";
+    $IDAkun = $_POST['pengguna'];
+  } if ($namabarang && $tanggalbeli && $jumlahbeli && $hargabeli && $totalbeli && $IDAkun) {
+    $query = "UPDATE pembelian SET IDBarang='{$namabarang}', jumlahbeli='{$jumlahbeli}', tanggalbeli='$tanggalbeli', hargabeli='$hargabeli', totalpembelian='$totalbeli', IDAkun='$IDAkun' WHERE IDBeli='{$IDBeli}'";
     mysqli_query( $connection, $query );
     header( "location:index.php?id=pembelian" );
 
@@ -92,9 +94,10 @@ if ( !$connection ) {
     $jumlahjual = $_REQUEST['jumlahjual'] ?? '';
     $hargajual = $_REQUEST['hargajual'] ?? '';
     $totaljual = $_REQUEST['totaljual'] ?? '';
+    $IDAkun = $_REQUEST['pengguna'] ?? '';
 
-   if ($namabarang && $tanggaljual && $jumlahjual && $hargajual && $totaljual) {
-    $query = "INSERT INTO penjualan(IDBarang,jumlahjual,tanggaljual,hargajual,totalpenjualan) VALUES ('{$namabarang}','$jumlahjual','$tanggaljual','$hargajual','$totaljual')";
+   if ($namabarang && $tanggaljual && $jumlahjual && $hargajual && $totaljual && $IDAkun) {
+    $query = "INSERT INTO penjualan(IDBarang,jumlahjual,tanggaljual,hargajual,totalpenjualan,IDAkun) VALUES ('{$namabarang}','$jumlahjual','$tanggaljual','$hargajual','$totaljual','$IDAkun')";
     mysqli_query( $connection, $query );
     header( "location:index.php?id=penjualan" );
   }
@@ -105,10 +108,29 @@ if ( !$connection ) {
   $jumlahjual = $_POST['jumlahjual'];
   $hargajual = $_POST['hargajual'];
   $totaljual = $_POST['totaljual'];
+  $IDAkun = $_POST['pengguna'];
 } if ($namabarang && $tanggaljual && $jumlahjual && $hargajual && $totaljual) {
-  $query = "UPDATE penjualan SET IDBarang='{$namabarang}', jumlahjual='{$jumlahjual}', tanggaljual='$tanggaljual', hargajual='$hargajual', totalpenjualan='$totaljual' WHERE IDJual='{$IDJual}'";
+  $query = "UPDATE penjualan SET IDBarang='{$namabarang}', jumlahjual='{$jumlahjual}', tanggaljual='$tanggaljual', hargajual='$hargajual', totalpenjualan='$totaljual', IDAkun='$IDAkun' WHERE IDJual='{$IDJual}'";
   mysqli_query( $connection, $query );
   header( "location:index.php?id=penjualan" );
+}
+
+ if ('profilKaryawan' == $action) {
+  $IDAkun = $_POST['id'];
+  $nama = $_POST['nama'];
+  $email = $_POST['email'];
+  $passwordbaru = $_POST['passwordbaru'];
+  $passwordlama = $_POST['passwordlama'];
+  $data = mysqli_query($connection, "SELECT password FROM akun where IDAkun = '$IDAkun'");
+  while ($a = mysqli_fetch_array($data)) {
+    if ($passwordlama != $a['password']) {
+      echo "<script>alert('Password yang dimasukkan salah!');history.go(-1);</script>";
+    } else {
+      $query = "UPDATE akun SET nama='{$nama}', email='{$email}', password='{$passwordbaru}' WHERE IDAkun='{$IDAkun}'";
+      mysqli_query( $connection, $query );
+      header( "location:index.php?id=profilKaryawan" );
+    }
+  }
 }
 
 }

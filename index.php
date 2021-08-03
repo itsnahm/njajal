@@ -86,8 +86,12 @@ $action = $_REQUEST['action'] ?? '';
 								$page = "Hapus Akun";
 						} elseif ( 'ubahAkun' == $action ) {
 								$page = "Ubah Akun";
-						} elseif ( 'editPharmacist' == $action ) {
-								echo "Edit Pharmacist";
+						}	elseif ( 'profilKaryawan' == $id ) {
+								$page = "Profil Karyawan";
+						}	elseif ( 'profilOwner' == $id ) {
+									$page = "Profil Owner";
+						} elseif ( 'ubahAkunKaryawan' == $action ) {
+								$page = "Ubah Profil";
 						} elseif ( 'editSalesman' == $action ) {
 								echo "Edit Salesman";
 						}
@@ -189,6 +193,7 @@ $action = $_REQUEST['action'] ?? '';
             </a>
 
           </li>
+					<?php if ('Owner' == $status) {?>
           <li class="nav-item">
             <a href="index.php?id=pembelian" class="nav-link">
               <i class="nav-icon fas fa-chart-pie"></i>
@@ -199,6 +204,7 @@ $action = $_REQUEST['action'] ?? '';
             </a>
 
           </li>
+				<?php } ?>
 					<?php if ('Owner' == $status) {?>
           <li class="nav-item">
             <a href="index.php?id=laporan" class="nav-link">
@@ -216,7 +222,7 @@ $action = $_REQUEST['action'] ?? '';
             <a href="index.php?id=akun" class="nav-link">
               <i class="nav-icon fas fa-edit"></i>
               <p>
-                Akun
+                Daftar Akun
 
               </p>
             </a>
@@ -224,6 +230,30 @@ $action = $_REQUEST['action'] ?? '';
           </li>
 				<?php } ?>
 
+<?php if ('Karyawan' == $status) { ?>
+				<li class="nav-item">
+					<a href="index.php?id=profilKaryawan" class="nav-link">
+						<i class="nav-icon fas fa-edit"></i>
+						<p>
+							Profil
+
+						</p>
+					</a>
+
+				</li>
+<?php } ?>
+<?php if ('Owner' == $status) { ?>
+				<li class="nav-item">
+					<a href="index.php?id=profilOwner" class="nav-link">
+						<i class="nav-icon fas fa-edit"></i>
+						<p>
+							Profil
+
+						</p>
+					</a>
+
+				</li>
+<?php } ?>
           <li class="nav-item">
             <a href="logout.php" class="nav-link">
               <i class="nav-icon far fa-circle text-danger"></i>
@@ -339,9 +369,11 @@ echo $totalBarang['totalBarang'];
 <div class="col-lg-3 col-6">
 					<a href="index.php?id=tambahBarang"><button type="button" class="btn btn-block btn-danger">+ Tambah barang baru</button></a>
 </div>
+<?php if ('Owner' == $status) {?>
 <div class="col-lg-3 col-6">
 				<a href="index.php?id=tambahBeli"><button type="button" class="btn btn-block btn-warning">+ Tambah pembelian baru</button></a>
 </div>
+<?php } ?>
 <div class="col-lg-3 col-6">
 					<a href="index.php?id=tambahJual"><button type="button" class="btn btn-block btn-success">+ Tambah penjualan baru</button></a>
 </div>
@@ -628,6 +660,7 @@ echo $totalBarang['totalBarang'];
 	</section>
 <?php } ?>
 
+
 <!--TAMBAH PENJUALAN BARANG -->
 <?php if ('tambahJual' == $id) { ?>
 	<section class="content">
@@ -795,6 +828,7 @@ echo $totalBarang['totalBarang'];
                         header( "location:index.php?id=penjualan" );
                 }?>
 
+<?php if ('Owner' == $status) {?>
 <!-- PEMBELIAN!!!!!-->
 <?php if ('pembelian' == $id) { ?>
 	<section class="content">
@@ -852,7 +886,9 @@ echo $totalBarang['totalBarang'];
 		<!-- /.card -->
 	</section>
 <?php } ?>
+<?php } ?>
 
+<?php if ('Owner' == $status) {?>
 <!-- TAMBAH PEMBELIAN BARANG -->
 <?php if ('tambahBeli' == $id) { ?>
 	<section class="content">
@@ -928,7 +964,9 @@ echo $totalBarang['totalBarang'];
 
 	</section>
 <?php } ?>
+<?php } ?>
 
+<?php if ('Owner' == $status) {?>
 <!-- UBAH PEMBELIAN -->
 <?php if ('ubahBeli' == $action) {
 $IDBeli = $_REQUEST['id'];
@@ -1013,6 +1051,7 @@ $beli = mysqli_fetch_assoc($result);
 
 	</section>
 <?php } ?>
+<?php } ?>
 
 <!--HAPUS BELI -->
 <?php if ( 'hapusBeli' == $action ) {
@@ -1074,7 +1113,7 @@ for($i = $mulai;$i<$mulai + 100;$i++){
 					<th>Juml. beli</th>
 					<th>Terjual</th>
 					<th>Sisa barang</th>
-					<th>Harga pokok</th>
+					<th>Harga pokok per unit</th>
 					<th>Nilai pers. akhir</th>
 					<th>HPP</th>
 					<th>Laba kotor</th>
@@ -1280,6 +1319,151 @@ $akun = mysqli_fetch_assoc($result);
                 }?>
 <?php } ?>
 
+<?php if ('profilKaryawan' == $id) {
+$IDAkun = $ID;
+$ubahAkun = "SELECT * FROM akun WHERE IDAkun='{$IDAkun}'";
+$result = mysqli_query($connection, $ubahAkun);
+
+$akun = mysqli_fetch_assoc($result);
+	 ?>
+	<section class="content">
+
+		<!-- Default box -->
+		<div class="card card-primary">
+			<div class="card-header">
+				<h3 class="card-title"><?php echo "$page"; ?></h3>
+
+			</div>
+			<div class="card-body">
+
+				<form class="form-horizontal" action="create.php" method="POST">
+
+					<div class="form-group row">
+						<label for="inputEmail3" class="col-sm-2 col-form-label">Nama</label>
+						<div class="col-sm-10">
+							<input type="text" name="nama" class="form-control" id="inputEmail3" value="<?php echo $akun['nama']; ?>" required>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="inputEmail3" class="col-sm-2 col-form-label">Email</label>
+						<div class="col-sm-10">
+							<input type="email" name="email" class="form-control" id="inputEmail3" value="<?php echo $akun['email']; ?>" required>
+						</div>
+					</div>
+
+					<div class="form-group row">
+						<label for="inputEmail3" class="col-sm-2 col-form-label">Status</label>
+						<div class="col-sm-10">
+							<input type="email" name="status" class="form-control" id="inputEmail3" value="<?php echo $akun['status']; ?>" readonly>
+						</div>
+					</div>
+
+					<div class="form-group row">
+				 	 <label for="inputEmail3" class="col-sm-2 col-form-label">Password Lama</label>
+				 	 <div class="col-sm-10">
+				 		 <input type="password" name="passwordlama" class="form-control" id="inputEmail3" value="" required>
+				 	 </div>
+				  </div>
+
+					<div class="form-group row">
+				 	 <label for="inputEmail3" class="col-sm-2 col-form-label">Password Baru</label>
+				 	 <div class="col-sm-10">
+				 		 <input type="password" name="passwordbaru" class="form-control" id="inputEmail3" value="" required>
+				 	 </div>
+				  </div>
+
+
+					<input type="hidden" name="action" value="profilKaryawan">
+					<input type="hidden" name="id" value="<?php echo $IDAkun; ?>">
+
+			</div>
+
+			<!-- /.card-body -->
+			<div class="card-footer">
+				<button type="submit" class="btn btn-primary">Simpan perubahan</button>
+				<a href="index.php?id=akun"<button type="submit" class="btn btn-default float-right">Batal</button></a>
+			</div>
+
+			</form>
+			<!-- /.card-footer-->
+		</div>
+		<!-- /.card -->
+
+	</section>
+<?php } ?>
+
+<?php if ('profilOwner' == $id) {
+$IDAkun = $ID;
+$ubahAkun = "SELECT * FROM akun WHERE IDAkun='{$IDAkun}'";
+$result = mysqli_query($connection, $ubahAkun);
+
+$akun = mysqli_fetch_assoc($result);
+	 ?>
+	<section class="content">
+
+		<!-- Default box -->
+		<div class="card card-primary">
+			<div class="card-header">
+				<h3 class="card-title"><?php echo "$page"; ?></h3>
+
+			</div>
+			<div class="card-body">
+
+				<form class="form-horizontal" action="create.php" method="POST">
+
+					<div class="form-group row">
+						<label for="inputEmail3" class="col-sm-2 col-form-label">Nama</label>
+						<div class="col-sm-10">
+							<input type="text" name="nama" class="form-control" id="inputEmail3" value="<?php echo $akun['nama']; ?>" required>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="inputEmail3" class="col-sm-2 col-form-label">Email</label>
+						<div class="col-sm-10">
+							<input type="email" name="email" class="form-control" id="inputEmail3" value="<?php echo $akun['email']; ?>" required>
+						</div>
+					</div>
+
+					<div class="form-group row">
+						<label for="inputEmail3" class="col-sm-2 col-form-label">Status</label>
+						<div class="col-sm-10">
+							<input type="email" name="status" class="form-control" id="inputEmail3" value="<?php echo $akun['status']; ?>" readonly>
+						</div>
+					</div>
+
+					<div class="form-group row">
+				 	 <label for="inputEmail3" class="col-sm-2 col-form-label">Password Lama</label>
+				 	 <div class="col-sm-10">
+				 		 <input type="password" name="passwordlama" class="form-control" id="inputEmail3" value="" required>
+				 	 </div>
+				  </div>
+
+					<div class="form-group row">
+				 	 <label for="inputEmail3" class="col-sm-2 col-form-label">Password Baru</label>
+				 	 <div class="col-sm-10">
+				 		 <input type="password" name="passwordbaru" class="form-control" id="inputEmail3" value="" required>
+				 	 </div>
+				  </div>
+
+
+					<input type="hidden" name="action" value="profilKaryawan">
+					<input type="hidden" name="id" value="<?php echo $IDAkun; ?>">
+
+			</div>
+
+			<!-- /.card-body -->
+			<div class="card-footer">
+				<button type="submit" class="btn btn-primary">Simpan perubahan</button>
+				<a href="index.php?id=akun"<button type="submit" class="btn btn-default float-right">Batal</button></a>
+			</div>
+
+			</form>
+			<!-- /.card-footer-->
+		</div>
+		<!-- /.card -->
+
+	</section>
+<?php } ?>
   </div>
   <!-- /.content-wrapper -->
 
