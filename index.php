@@ -79,7 +79,7 @@ $action = $_REQUEST['action'] ?? '';
 						} elseif ( 'hapusBeli' == $action ) {
 						 		$page = "Hapus beli";
 						} elseif ( 'laporan' == $id ) {
-								$page = "Laporan Keuangan";
+								$page = "Laporan Nilai Persediaan";
 						} elseif ( 'tambahAkun' == $id ) {
 								$page = "Tambah akun";
 						} elseif ( 'hapusAkun' == $id ) {
@@ -92,8 +92,8 @@ $action = $_REQUEST['action'] ?? '';
 									$page = "Profil Owner";
 						} elseif ( 'ubahAkunKaryawan' == $action ) {
 								$page = "Ubah Profil";
-						} elseif ( 'editSalesman' == $action ) {
-								echo "Edit Salesman";
+						} elseif ( 'omzet' == $id ) {
+								$page = "Omzet Per Bulan";
 						}
 						$no = 1;
 				?>
@@ -210,7 +210,17 @@ $action = $_REQUEST['action'] ?? '';
             <a href="index.php?id=laporan" class="nav-link">
               <i class="nav-icon fas fa-tree"></i>
               <p>
-                Laporan Keuangan
+                Laporan Nilai Persediaan
+
+              </p>
+            </a>
+
+          </li>
+					<li class="nav-item">
+            <a href="index.php?id=omzet" class="nav-link">
+              <i class="nav-icon fas fa-tree"></i>
+              <p>
+                Omzet per bulan
 
               </p>
             </a>
@@ -1062,7 +1072,7 @@ $beli = mysqli_fetch_assoc($result);
 						}?>
 
 <?php if ('Owner' == $status) {?>
-<!--LAPORAN UANG!! -->
+<!--LAPORAN NILAI PERSEDIAAN!! -->
 <?php if ('laporan' == $id) { ?>
 	<section class="content">
 
@@ -1129,6 +1139,25 @@ for($i = $mulai;$i<$mulai + 100;$i++){
 		<!-- /.card -->
 	</section>
 <?php } ?>
+
+<?php if ('omzet' == $id) { ?>
+	<section class="content">
+
+		<!-- Default box -->
+		<div class="card">
+			<div class="card-header">
+				<h3 class="card-title"><?php echo "$page"; ?></h3>
+
+			</div>
+			<div class="card-body">
+
+			</div>
+
+		</div>
+		<!-- /.card -->
+	</section>
+<?php } ?>
+
 <?php } ?>
 
 <?php if ('Owner' == $status) {?>
