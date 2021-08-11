@@ -322,7 +322,7 @@ echo $totalBarang['totalBarang'];
  ?>
 								</h3>
 
-								<p>Total Barang</p>
+								<p>Total jenis barang</p>
 							</div>
 							<div class="icon">
 								<i class="ion ion-bag"></i>
@@ -335,7 +335,12 @@ echo $totalBarang['totalBarang'];
 						<!-- small box -->
 						<div class="small-box bg-success">
 							<div class="inner">
-								<h3>53<sup style="font-size: 20px">%</sup></h3>
+								<h3><?php
+								$query = "SELECT COUNT(*) totalBarang FROM daftarbarang;";
+								$result = mysqli_query ($connection, $query);
+								$totalBarang = mysqli_fetch_assoc($result);
+								echo $totalBarang['totalBarang'];
+								 ?></h3>
 
 								<p>Bounce Rate</p>
 							</div>
@@ -1150,7 +1155,51 @@ for($i = $mulai;$i<$mulai + 100;$i++){
 
 			</div>
 			<div class="card-body">
+				<form method="POST" class="form-inline" action="">
+	<select name="bulan" class="form-control" required="required">
 
+
+		<option value="1">Januari</option>
+		<option value="2">Februari</option>
+		<option value="3">Maret</option>
+		<option value="4">April</option>
+		<option value="5">Mei</option>
+		<option value="6">Juni</option>
+		<option value="7">Juli</option>
+		<option value="8">Agustus</option>
+		<option value="9">September</option>
+		<option value="10">Oktober</option>
+		<option value="11">November</option>
+		<option value="12">Desember</option>
+	</select>
+	<select class="form-control" name="tahun">
+		<?php
+$mulai= date('Y') - 50;
+for($i = $mulai;$i<$mulai + 100;$i++){
+    $sel = $i == date('Y') ? ' selected="selected"' : '';
+    echo '<option value="'.$i.'"'.$sel.'>'.$i.'</option>';
+
+
+}
+?>
+
+	</select>
+	<button class="btn btn-primary" name="omzet"><span class="glyphicon glyphicon-search"></span> Cari</button>
+</form>
+<br style="clear:both;"/><br />
+<table id="example1" class="table table-bordered">
+<thead>
+				<tr>
+					<th>No.</th>
+					<th>Bulan</th>
+					<th>Tahun</th>
+					<th>Total Penjualan</th>
+				</tr>
+			</thead>
+			<tbody>
+				<?php include 'omzet.php'?>
+			</tbody>
+		</table>
 			</div>
 
 		</div>
