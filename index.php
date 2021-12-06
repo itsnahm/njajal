@@ -11,6 +11,7 @@ $nama=$_SESSION["nama"];
 $email=$_SESSION["email"];
 $status=$_SESSION["status"];
 
+
 ob_start();
 
 include_once "config.php";
@@ -308,78 +309,8 @@ $action = $_REQUEST['action'] ?? '';
     <div class="content">
       <div class="container-fluid">
 				<div class="row">
-					<div class="col-lg-3 col-6">
-						<!-- small box -->
-						<div class="small-box bg-info">
-							<div class="inner">
-								<h3>
 
-<?php
-$query = "SELECT COUNT(*) totalBarang FROM daftarbarang;";
-$result = mysqli_query ($connection, $query);
-$totalBarang = mysqli_fetch_assoc($result);
-echo $totalBarang['totalBarang'];
- ?>
-								</h3>
 
-								<p>Total jenis barang</p>
-							</div>
-							<div class="icon">
-								<i class="ion ion-bag"></i>
-							</div>
-							<a href="index.php?id=daftarBarang" class="small-box-footer">Info lengkap <i class="fas fa-arrow-circle-right"></i></a>
-						</div>
-					</div>
-					<!-- ./col -->
-					<div class="col-lg-3 col-6">
-						<!-- small box -->
-						<div class="small-box bg-success">
-							<div class="inner">
-								<h3><?php
-								$query = "SELECT COUNT(*) totalBarang FROM daftarbarang;";
-								$result = mysqli_query ($connection, $query);
-								$totalBarang = mysqli_fetch_assoc($result);
-								echo $totalBarang['totalBarang'];
-								 ?></h3>
-
-								<p>Bounce Rate</p>
-							</div>
-							<div class="icon">
-								<i class="ion ion-stats-bars"></i>
-							</div>
-							<a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-						</div>
-					</div>
-					<!-- ./col -->
-					<div class="col-lg-3 col-6">
-						<!-- small box -->
-						<div class="small-box bg-warning">
-							<div class="inner">
-								<h3>44</h3>
-
-								<p>User Registrations</p>
-							</div>
-							<div class="icon">
-								<i class="ion ion-person-add"></i>
-							</div>
-							<a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-						</div>
-					</div>
-					<!-- ./col -->
-					<div class="col-lg-3 col-6">
-						<!-- small box -->
-						<div class="small-box bg-danger">
-							<div class="inner">
-								<h3>65</h3>
-
-								<p>Unique Visitors</p>
-							</div>
-							<div class="icon">
-								<i class="ion ion-pie-graph"></i>
-							</div>
-							<a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-						</div>
-					</div>
 
 <div class="col-lg-3 col-6">
 					<a href="index.php?id=tambahBarang"><button type="button" class="btn btn-block btn-danger">+ Tambah barang baru</button></a>
@@ -393,6 +324,32 @@ echo $totalBarang['totalBarang'];
 					<a href="index.php?id=tambahJual"><button type="button" class="btn btn-block btn-success">+ Tambah penjualan baru</button></a>
 </div>
 					<!-- ./col -->
+
+
+
+				</div>
+			</br>
+				<div class="card card-success">
+					<div class="card-header">
+						<h3 class="card-title">Tata Cara Penggunaan Sistem</h3>
+
+						<div class="card-tools">
+
+						</div>
+					</div>
+					<div class="card-body">
+
+						1. Jika ingin menambahkan data baru, klik tombol tambah sesuai dengan data yang ingin ditambahkan </br>
+						<?php if ('Owner' == $status) {?>
+						2. Tombol untuk menambah data baru terletak di halaman Dashboard serta di halaman Daftar Barang, Pembelian, Penjualan, dan Akun</br>
+				 	<?php } ?>
+					<?php if ('Karyawan' == $status) {?>
+					2. Tombol untuk menambah data baru terletak di halaman Dashboard serta di halaman Daftar Barang dan halaman Penjualan </br>
+				<?php } ?>
+						3. Jika ingin melihat seluruh data, klik pada menu yang berada di sidebar kiri </br>
+						4. Anda bisa mengganti nama, email, dan password pada halaman Profil yang berada di sidebar kiri
+					</div>
+					<!-- /.card-body -->
 				</div>
 
         <!-- /.row -->
@@ -1631,6 +1588,191 @@ function penjualan() {
 			 document.getElementById('totaljual').value = result;
 		}
 }
+</script>
+
+<script>
+  $(function () {
+    /* ChartJS
+     * -------
+     * Here we will create a few charts using ChartJS
+     */
+
+    //--------------
+    //- AREA CHART -
+    //--------------
+
+    // Get context with jQuery - using jQuery's .get() method.
+    var areaChartCanvas = $('#areaChart').get(0).getContext('2d')
+
+    var areaChartData = {
+      labels  : ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+      datasets: [
+        {
+          label               : 'Digital Goods',
+          backgroundColor     : 'rgba(60,141,188,0.9)',
+          borderColor         : 'rgba(60,141,188,0.8)',
+          pointRadius          : false,
+          pointColor          : '#3b8bba',
+          pointStrokeColor    : 'rgba(60,141,188,1)',
+          pointHighlightFill  : '#fff',
+          pointHighlightStroke: 'rgba(60,141,188,1)',
+          data                : [28, 48, 40, 19, 86, 27, 90]
+        },
+        {
+          label               : 'Electronics',
+          backgroundColor     : 'rgba(210, 214, 222, 1)',
+          borderColor         : 'rgba(210, 214, 222, 1)',
+          pointRadius         : false,
+          pointColor          : 'rgba(210, 214, 222, 1)',
+          pointStrokeColor    : '#c1c7d1',
+          pointHighlightFill  : '#fff',
+          pointHighlightStroke: 'rgba(220,220,220,1)',
+          data                : [65, 59, 80, 81, 56, 55, 40]
+        },
+      ]
+    }
+
+    var areaChartOptions = {
+      maintainAspectRatio : false,
+      responsive : true,
+      legend: {
+        display: false
+      },
+      scales: {
+        xAxes: [{
+          gridLines : {
+            display : false,
+          }
+        }],
+        yAxes: [{
+          gridLines : {
+            display : false,
+          }
+        }]
+      }
+    }
+
+    // This will get the first returned node in the jQuery collection.
+    var areaChart       = new Chart(areaChartCanvas, {
+      type: 'line',
+      data: areaChartData,
+      options: areaChartOptions
+    })
+
+    //-------------
+    //- LINE CHART -
+    //--------------
+    var lineChartCanvas = $('#lineChart').get(0).getContext('2d')
+    var lineChartOptions = $.extend(true, {}, areaChartOptions)
+    var lineChartData = $.extend(true, {}, areaChartData)
+    lineChartData.datasets[0].fill = false;
+    lineChartData.datasets[1].fill = false;
+    lineChartOptions.datasetFill = false
+
+    var lineChart = new Chart(lineChartCanvas, {
+      type: 'line',
+      data: lineChartData,
+      options: lineChartOptions
+    })
+
+    //-------------
+    //- DONUT CHART -
+    //-------------
+    // Get context with jQuery - using jQuery's .get() method.
+    var donutChartCanvas = $('#donutChart').get(0).getContext('2d')
+    var donutData        = {
+      labels: [
+          'Chrome',
+          'IE',
+          'FireFox',
+          'Safari',
+          'Opera',
+          'Navigator',
+      ],
+      datasets: [
+        {
+          data: [700,500,400,600,300,100],
+          backgroundColor : ['#f56954', '#00a65a', '#f39c12', '#00c0ef', '#3c8dbc', '#d2d6de'],
+        }
+      ]
+    }
+    var donutOptions     = {
+      maintainAspectRatio : false,
+      responsive : true,
+    }
+    //Create pie or douhnut chart
+    // You can switch between pie and douhnut using the method below.
+    var donutChart = new Chart(donutChartCanvas, {
+      type: 'doughnut',
+      data: donutData,
+      options: donutOptions
+    })
+
+    //-------------
+    //- PIE CHART -
+    //-------------
+    // Get context with jQuery - using jQuery's .get() method.
+    var pieChartCanvas = $('#pieChart').get(0).getContext('2d')
+    var pieData        = donutData;
+    var pieOptions     = {
+      maintainAspectRatio : false,
+      responsive : true,
+    }
+    //Create pie or douhnut chart
+    // You can switch between pie and douhnut using the method below.
+    var pieChart = new Chart(pieChartCanvas, {
+      type: 'pie',
+      data: pieData,
+      options: pieOptions
+    })
+
+    //-------------
+    //- BAR CHART -
+    //-------------
+    var barChartCanvas = $('#barChart').get(0).getContext('2d')
+    var barChartData = $.extend(true, {}, areaChartData)
+    var temp0 = areaChartData.datasets[0]
+    var temp1 = areaChartData.datasets[1]
+    barChartData.datasets[0] = temp1
+    barChartData.datasets[1] = temp0
+
+    var barChartOptions = {
+      responsive              : true,
+      maintainAspectRatio     : false,
+      datasetFill             : false
+    }
+
+    var barChart = new Chart(barChartCanvas, {
+      type: 'bar',
+      data: barChartData,
+      options: barChartOptions
+    })
+
+    //---------------------
+    //- STACKED BAR CHART -
+    //---------------------
+    var stackedBarChartCanvas = $('#stackedBarChart').get(0).getContext('2d')
+    var stackedBarChartData = $.extend(true, {}, barChartData)
+
+    var stackedBarChartOptions = {
+      responsive              : true,
+      maintainAspectRatio     : false,
+      scales: {
+        xAxes: [{
+          stacked: true,
+        }],
+        yAxes: [{
+          stacked: true
+        }]
+      }
+    }
+
+    var stackedBarChart = new Chart(stackedBarChartCanvas, {
+      type: 'bar',
+      data: stackedBarChartData,
+      options: stackedBarChartOptions
+    })
+  })
 </script>
 
 </body>
